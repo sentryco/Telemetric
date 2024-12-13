@@ -28,12 +28,13 @@ class GA4Tracker {
       var request = URLRequest(url: url, cachePolicy: .useProtocolCachePolicy)
       request.httpMethod = "POST"
       let payload: Payload = .init(
-         client_id: UUID().uuidString/*"1234.1234"*/, // "1234567890.0987654321" // UUID().uuidString, /*""*//*"1234567890.0987654321"*/ // - Fixme: ⚠️️ try UUID().uuidString here as well?
+         client_id: UUID().uuidString, /*"1234.1234"*/ // "1234567890.0987654321" // UUID().uuidString, /*""*//*"1234567890.0987654321"*/ // - Fixme: ⚠️️ try UUID().uuidString here as well?
          user_id: UUID().uuidString,
-         events: events//,//,//,
-//         user_properties: userProps
-//         non_personalized_ads: false
+         events: events,//,//,//,
+         user_properties: userProps,
+         non_personalized_ads: false
       )
+//      let data = try? JSONSerialization.data(withJSONObject: payload, options: [])
       let data: Data? = try? JSONEncoder().encode(payload)
       request.httpBody = data
       request.setValue("application/json", forHTTPHeaderField: "Content-Type")
