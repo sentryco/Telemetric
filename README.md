@@ -13,8 +13,8 @@ Minimal GA4 telemetrics for iOS and macOS.
 
 ### Pre-requsit:
 - Create a free analytics account on [analytics.coogle.com](analytics.coogle.com) Login with your google account
-- Find your Measurment-ID: analytics.coogle.com -> admin -> data collectiion... -> data streams -> tap your website / app -> MeasurmentID
-- Find your API-Secret: analytics.coogle.com -> admin -> data collectiion... -> data streams -> tap your website / app -> Measurement Protocol API secrets
+- Find your Measurment-ID: [analytics.coogle.com](analytics.coogle.com) -> admin -> data collectiion... -> data streams -> tap your website / app -> MeasurmentID
+- Find your API-Secret: [analytics.coogle.com](analytics.coogle.com) -> admin -> data collectiion... -> data streams -> tap your website / app -> Measurement Protocol API secrets
 
 ### Examples:
 
