@@ -7,14 +7,15 @@ let apiSecret: String = ""
 
 public class Telemetric: TelemetricKind {
    static let shared: Telemetric = .init()
-   let tracker = Tracker(measurementID: measurementID, apiSecret: apiSecret)
+   static let id = Identity.uniqueUserIdentifier(type: .keychain)
+   let tracker = Tracker(measurementID: measurementID, apiSecret: apiSecret, clientID: id)
    public lazy var collector = EventCollector(batchSize: 4, maxAgeSeconds: 5) { events in
       self.tracker.sendEvent(events: events)
    }
 }
 class TelemetricTests: XCTestCase {
    func testUserID() {
-      let clientID = Identity.uniqueUserIdentifier(type: .userdefault)
+      let clientID = Identity.uniqueUserIdentifier(type: .vendor)
       let client_id = Payload.randomNumberAndTimestamp(uuidStr: clientID)
       Swift.print("client_id:  \(client_id)")
    }
@@ -38,7 +39,7 @@ class TelemetricTests: XCTestCase {
     * Example usage
     */
    func testExample() throws {
-      let tracker = Tracker(measurementID: measurementID, apiSecret: apiSecret)
+      let tracker = Tracker(measurementID: measurementID, apiSecret: apiSecret, clientID: Identity.uniqueUserIdentifier(type: .vendor))
       // Create an expectation for a background download task.
       let expectation = self.expectation(description: "Send event")
       let events: [Event] = [

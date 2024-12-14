@@ -77,7 +77,6 @@ extension EventCollector {
    public func trackEvent(_ event: Event) {
       events.append(event)
       eventPublisher.send(event) // Send the event to the publisher
-      
       // Start the timer if it's not already running
       if timer == nil {
          startTimer()
@@ -87,7 +86,9 @@ extension EventCollector {
     * Send event to GA4
     */
    private func sendEventsToGA4(events: [Event]) {
+      #if DEBUG
       Swift.print("sendEventsToGA4 - events.isEmpty: \(self.events.isEmpty)")
+      #endif
       if !self.events.isEmpty {
          self.onSend?(events)
          self.events.removeAll()

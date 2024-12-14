@@ -27,7 +27,7 @@ public class Tracker {
     *   - apiSecret: - Fixme: ⚠️️ add doc
     *   - apiEndpoint: - Fixme: ⚠️️ add doc
     */
-   public init(measurementID: String, apiSecret: String? = nil, apiEndpoint: String = "https://www.google-analytics.com/mp/collect", clientID: String = Identity.uniqueUserIdentifier(type: .userdefault)) {
+   public init(measurementID: String, apiSecret: String? = nil, apiEndpoint: String = "https://www.google-analytics.com/mp/collect", clientID: String = Identity.uniqueUserIdentifier(type: .vendor)) {
       self.measurementID = measurementID
       self.apiSecret = apiSecret
       self.apiEndpoint = apiEndpoint
@@ -42,9 +42,9 @@ public class Tracker {
     *   - complete: - Fixme: ⚠️️ add doc
     */
    public func sendEvent(events: [Event], /*userProps: [String: String] = [:],*/ complete: ((Bool) -> Void)? = nil) {
-      #if DEBUG
-      Swift.print("sendEvent")
-      #endif
+//      #if DEBUG
+//      Swift.print("sendEvent")
+//      #endif
       var components = URLComponents(string: apiEndpoint)
       components?.queryItems = [
          URLQueryItem(name: "api_secret", value: apiSecret), // Optional, for authenticated hits, I think gtag flavour requires apisecret ref: https://github.com/adswerve/GA4-Measurement-Protocol-Apple-tvOS/blob/main/Example/tvOSTestApp/tvOSTestApp/GA4MPClient.swift
@@ -53,8 +53,12 @@ public class Tracker {
       guard let url = components?.url else { return }
       var request = URLRequest(url: url, cachePolicy: .useProtocolCachePolicy)
       request.httpMethod = "POST"
+      let client_id: String = /*"GA1.1." + */Payload.randomNumberAndTimestamp(uuidStr: clientID)
+//      #if DEBUG
+//      Swift.print("client_id: \(client_id)")
+//      #endif
       let payload: Payload = .init(
-         client_id: Payload.randomNumberAndTimestamp(uuidStr: clientID),
+         client_id: client_id,
          // user_id: UUID().uuidString,
          events: events,
          /*user_properties: userProps,*/
