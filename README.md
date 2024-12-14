@@ -67,7 +67,7 @@ Telemetric.shared.send(event: // single
 
 ```swift
 dependencies: [
-    .package(url: "https://github.com/sentryco/telemetric", branch: "main")
+    .package(url: "https://github.com/sentryco/Telemetric", branch: "main")
 ]
 ```
 
