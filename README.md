@@ -93,8 +93,8 @@ By utilizing these various data types effectively, you can gain comprehensive in
 - ga4 endpoint: https://www.google-analytics.com/g/collect
 - Debug endpoint: https://www.google-analytics.com/debug/mp/collect
 
-> [!WARNING]  
-> Nested params in event is not working at the moment. This will be implemented later. When the struct -> json format conversion can output clean json.
+> [!CAUTION]  
+> Nested params in event is not supported by GA4. Use flat structures.
  
 > [!WARNING]
 > Ensure that the user property you are trying to send has been properly registered in GA4. You need to create the user property in the GA4 Admin section under Custom Definitions before it can be sent with events. Go to GA4 Admin. Under the "Data display" section, click on "Custom definitions"

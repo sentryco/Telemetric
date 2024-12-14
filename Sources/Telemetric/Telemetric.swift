@@ -1,5 +1,7 @@
 import Foundation
-
+/**
+ * - Fixme: ⚠️️ Change name to Telemetric?
+ */
 public class GA4Tracker {
    /**
     * Measurement ID
@@ -7,6 +9,7 @@ public class GA4Tracker {
    let measurementID: String
    /**
     * API secret
+    * - Fixme: ⚠️️ make this non optional?
     */
    let apiSecret: String?
    /**
@@ -74,7 +77,7 @@ public class GA4Tracker {
                   complete?(false)
                } else { // presumed success
                   #if DEBUG
-                  print("✅ Successful upload. Status code: \(statusCode)")
+                  print("✅ Successful upload. Status code: \(statusCode)") // If format or id is wrong this still returns success. Check your ga4 dashboard to confirm if things works
                   #endif
                   complete?(true)
                }

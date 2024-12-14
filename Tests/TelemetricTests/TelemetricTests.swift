@@ -11,7 +11,7 @@ class TelemetricTests: XCTestCase {
       let expectation = self.expectation(description: "Send event")
       let events: [Event] = [
          Event(
-            name: "game_over",
+            name: "game_start",
             params: [
                "action": "message shown",
                "label": "current_url"
@@ -34,7 +34,8 @@ class TelemetricTests: XCTestCase {
    /**
     * helps debuging the json format, its sensetive
     */
-   fileprivate func testJsonFormat() async throws {
+   /**/fileprivate func testJsonFormat() async throws {
+      Swift.print("testJsonFormat")
       let payload: Payload = .init(
          client_id: UUID().uuidString,
          // user_id: UUID().uuidString,
@@ -53,5 +54,43 @@ class TelemetricTests: XCTestCase {
          print("Error encoding payload: \(error)")
       }
    }
+   /**
+    * complex struct coding
+    */
+   /**/fileprivate func testComplexStruct() {
+      Swift.print("testComplexStruct")
+      //let event = Event(name: "eventName", params: ["key1": "value1", "key2": 42, "values": ["color": "blue", "price": "100"]/**/])
+      let event = Event(
+         name: "game_start",
+         params: [
+            "action": "message shown",
+            "label": "current_url",
+            "values_color": "blue",
+            "values_price": 100,
+         ]
+      )
+      let payload = Payload(client_id: "12345", /*user_id: "user123",*/ events: [event], user_properties: ["property1": "value1"], non_personalized_ads: false)
+      
+      do {
+         // Encode the Payload instance to JSON data
+         let jsonData = try JSONEncoder().encode(payload)
+         
+         // Convert Data to JSON string for display purposes
+         if let jsonString = String(data: jsonData, encoding: .utf8) {
+            print(jsonString) // Output the JSON string representation in a more readable format
+         }
+         
+         // Pretty-print the JSON data
+         if let jsonObject = try JSONSerialization.jsonObject(with: jsonData, options: []) as? [String: Any],
+            let prettyJsonData = try? JSONSerialization.data(withJSONObject: jsonObject, options: [.prettyPrinted]),
+            let prettyJsonString = String(data: prettyJsonData, encoding: .utf8) {
+            print(prettyJsonString) // Output the pretty-printed JSON string
+         }
+      } catch {
+         print("Error encoding to JSON: \(error)")
+      }
+   }
 }
+ 
+
  

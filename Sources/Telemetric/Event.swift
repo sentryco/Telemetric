@@ -1,6 +1,6 @@
 import Foundation
 
-public struct Event: Encodable {
+public struct Event: Codable {
    /**
     * The event name, which should be
     * - Note: The name of the event. It must be 40 characters or fewer, can only contain alpha-numeric characters and underscores, and must start with an alphabetic character.
@@ -8,17 +8,39 @@ public struct Event: Encodable {
    public let name: String // might be eventName
    /**
     * An object containing various parameters
-    * - Not: This is String: Any so so we can nest the params. Requires encode and codingkeys to work
+    * - Note: Nested structures are not supported by GA4
+    * - Note: Ga4 will accept other values than strings, but presumably it is treated as a string
     */
-   public let params: [String: String] // - Fixme: ⚠️️ might be parameters
+   public let params: [String: Any]
    /**
     * - Parameters:
     *   - name: - Fixme: ⚠️️ add doc
     *   - params: - Fixme: ⚠️️ add doc
     */
-   public init(name: String, params: [String : String]) {
+   public init(name: String, params: [String : Any]) {
       self.name = name
       self.params = params
+   }
+}
+/**
+ * Codable - Suporting other types than string
+ */
+extension Event {
+   enum CodingKeys: String, CodingKey {
+      case name
+      case params
+   }
+   public init(from decoder: Decoder) throws {
+      let container = try decoder.container(keyedBy: CodingKeys.self)
+      name = try container.decode(String.self, forKey: .name)
+      let paramsDictionary = try container.decode([String: CodableAny].self, forKey: .params)
+      params = paramsDictionary.mapValues { $0.value }
+   }
+   public func encode(to encoder: Encoder) throws {
+      var container = encoder.container(keyedBy: CodingKeys.self)
+      try container.encode(name, forKey: .name)
+      let paramsDictionary = params.mapValues { CodableAny(value: $0) }
+      try container.encode(paramsDictionary, forKey: .params)
    }
 }
 extension Event {
@@ -61,3 +83,5 @@ extension Event {
    }
 }
 
+
+ 

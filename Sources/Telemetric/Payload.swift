@@ -1,6 +1,6 @@
 import Foundation
 
-public struct Payload: Encodable {
+public struct Payload: Codable {
    /**
     * Client ID is device and browser-specific
     * - Note: Random number and a timestamp  "XXXXXXXXXX.YYYYYYYYYY"
@@ -68,3 +68,5 @@ extension Payload {
       return combinedValue
    }
 }
+
+ 
