@@ -17,14 +17,41 @@ Minimal GA4 telemetrics for iOS and macOS.
 - Find your Measurment-ID: [analytics.coogle.com](analytics.coogle.com) -> admin -> data collection... -> data streams -> tap your website / app -> MeasurmentID
 - Find your API-Secret: [analytics.coogle.com](analytics.coogle.com) -> admin -> data collection... -> data streams -> tap your website / app -> Measurement Protocol API secrets
 
-### Examples:
-
+### Ping:
+Send single or multiple pings:
 ```swift
 let tracker = Tracker(measurementID: "G-XXXXXXXXXX", apiSecret: "YYYYYYYYYYYYYYYY")
 // Track events (The modern way to track)
 Event.customEvent(title: "view_item_list", key: "item_list_name", value: "Home Page"),
 // Track page-views (like legacy UA in GA3)
 Event.pageView(engagementTimeMSec: "2400")
+```
+
+### Batch ping:
+Conserve resources by inteligently batch process the pings when the system deems it convenient
+```swift
+// You make your own class with the config you want. 
+class Telemetric: TelemetricKind {
+   static let shared: Telemetric = .init()
+   let tracker = Tracker(
+      measurementID: "G-XXXXXXXXXX", // Your GA4 measurement-protocol ID
+      apiSecret: "YYYYYYYYYYYYYYYY", // Your GA4 API secret
+      clientID: Identity.uniqueUserIdentifier(type: .vendor) // Apples privacy friendly user id
+   )
+   lazy var collector = EventCollector(batchSize: 10, maxAgeSeconds: 3 * 60) { events in
+      self.tracker.sendEvent(events: events)
+   }
+}
+// This will be processed after 3 minutes
+// or immediatly if app closed or goes into the background
+// or immediatly if 8 additional events are added to the stack
+Telemetric.shared.send(events: [ // bulk
+   Event(name: "event3", params: ["flagging": false]),
+   Event(name: "event4", params: ["fiat": 100])
+])
+Telemetric.shared.send(event: // single
+   Event(name: "onboarding", params: ["progress": "complete"])]
+)
 ```
 
 > [!CAUTION]  

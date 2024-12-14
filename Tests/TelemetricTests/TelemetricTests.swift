@@ -12,7 +12,6 @@ public class Telemetric: TelemetricKind {
       self.tracker.sendEvent(events: events)
    }
 }
-
 class TelemetricTests: XCTestCase {
    func testUserID() {
       let clientID = Identity.uniqueUserIdentifier(type: .userdefault)
@@ -23,12 +22,10 @@ class TelemetricTests: XCTestCase {
     * batching. Send on x reached, or every 24h
     */
    func testBatching() throws {
-      Telemetric.shared.send(
-         event: Event(name: "event1", params: ["flag": false])
-      )
-      Telemetric.shared.send(
-         event: Event(name: "event2", params: ["money": 100])
-      )
+      Telemetric.shared.send(events: [
+         Event(name: "event3", params: ["flagging": false]),
+         Event(name: "event4", params: ["fiat": 100])
+      ])
       Swift.print("⚠️️ wait")
       sleep(15) // Wait for 20 seconds to let async calls complete
       Swift.print("⏰ timer up")

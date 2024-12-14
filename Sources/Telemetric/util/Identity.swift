@@ -18,14 +18,14 @@ import Cocoa
  *   - https://stackoverflow.com/a/20339893/5389500
  *   - https://developer.apple.com/forums/thread/127567
  */
-class Identity {}
+public class Identity {}
 
 extension Identity {
    /**
     * Generates a unique user identifier.
     * - Parameter type: Type of identifier (vendor, userDef or keychain)
     */
-   internal static func uniqueUserIdentifier(type: IDType) -> String {
+   public static func uniqueUserIdentifier(type: IDType) -> String {
       let id: String? = {
          switch type {
          case .vendor: return vendorID // Persistent between runs (in most cases)

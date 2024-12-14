@@ -27,7 +27,7 @@ public class Tracker {
     *   - apiSecret: - Fixme: ⚠️️ add doc
     *   - apiEndpoint: - Fixme: ⚠️️ add doc
     */
-   public init(measurementID: String, apiSecret: String? = nil, apiEndpoint: String = "https://www.google-analytics.com/mp/collect", clientID: String = defaultClientID) {
+   public init(measurementID: String, apiSecret: String? = nil, apiEndpoint: String = "https://www.google-analytics.com/mp/collect", clientID: String = Identity.uniqueUserIdentifier(type: .userdefault)) {
       self.measurementID = measurementID
       self.apiSecret = apiSecret
       self.apiEndpoint = apiEndpoint
@@ -86,5 +86,3 @@ public class Tracker {
       }.resume()
    }
 }
-// keeping this here avoids exposing Identity api
-public var defaultClientID: String = Identity.uniqueUserIdentifier(type: .userdefault)
