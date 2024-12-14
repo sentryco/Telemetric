@@ -61,7 +61,7 @@ extension Payload {
     * - Parameter uuidStr: - Fixme: ⚠️️ add doc
     * - Returns: - Fixme: ⚠️️ add doc
     */
-   static func randomNumberAndTimestamp(uuidStr: String) -> String {
+   public static func randomNumberAndTimestamp(uuidStr: String) -> String {
       let uuid = UUID.init(uuidString: uuidStr) ?? UUID()
       let uuidBytes = [UInt8](uuid.uuidString.utf8)
       let randomNumber = uuidBytes.reduce(0) { ($0 * 10 + UInt64($1 % 10)) % 1_000_000_0000 }
