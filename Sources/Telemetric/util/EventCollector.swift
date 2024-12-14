@@ -37,7 +37,6 @@ public class EventCollector {
       setupEventCollection()
       observeAppLifecycle()
    }
-   
    deinit {
       // Clean up background observer
       #if os(iOS)
@@ -66,9 +65,7 @@ extension EventCollector {
       Timer.publish(every: maxAgeSeconds, on: .main, in: .common)
          .autoconnect()
          .sink { [weak self] _ in
-            if !self!.events.isEmpty {
-               self?.sendEventsToGA4(events: self!.events)
-            }
+            self?.sendEventsToGA4(events: self!.events)
          }
          .store(in: &cancellables)
    }
@@ -86,8 +83,11 @@ extension EventCollector {
     * - Parameter events: - Fixme: ⚠️️ add doc
     */
    private func sendEventsToGA4(events: [Event]) {
-      self.onSend?(events)
-      self.events.removeAll()
+      Swift.print("sendEventsToGA4 - events.isEmpty: \(self.events.isEmpty)")
+      if !self.events.isEmpty {
+         self.onSend?(events)
+         self.events.removeAll()
+      }
    }
 }
 /**
@@ -129,9 +129,7 @@ extension EventCollector {
          self.backgroundTask = .invalid
       }
       // Perform the actual work here
-      if !self.events.isEmpty {
-         self.sendEventsToGA4(events: self.events)
-      }
+      self.sendEventsToGA4(events: self.events)
       // End the background task
       UIApplication.shared.endBackgroundTask(backgroundTask)
       backgroundTask = .invalid
@@ -141,9 +139,7 @@ extension EventCollector {
     * Perform any necessary cleanup or save operations here
     */
    @objc func appWillTerminate() {
-      if !self.events.isEmpty {
-         self.sendEventsToGA4(events: self.events)
-      }
+      self.sendEventsToGA4(events: self.events)
    }
    #endif
 }

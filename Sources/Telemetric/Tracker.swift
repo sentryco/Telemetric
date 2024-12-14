@@ -34,13 +34,17 @@ public class Tracker {
       self.clientID = clientID
    }
    /**
-    * - Note: url: https://www.google-analytics.com/mp/collect?measurement_id=G-EMPR3SY5D5&api_secret=YOUR_API_SECRET
+    * - Note: URL: https://www.google-analytics.com/mp/collect?measurement_id=G-EMPR3SY5D5&api_secret=YOUR_API_SECRET
+    * - Fixme: ⚠️️ Put this on a background thread, see NetTime package for instructions. Confer with copilot etc
     * - Parameters:
     *   - events: - Fixme: ⚠️️ add doc
     *   - userProps: - Fixme: ⚠️️ add doc
     *   - complete: - Fixme: ⚠️️ add doc
     */
-   public func sendEvent(events: [Event], userProps: [String: String] = [:], complete: ((Bool) -> Void)? = nil) {
+   public func sendEvent(events: [Event], /*userProps: [String: String] = [:],*/ complete: ((Bool) -> Void)? = nil) {
+      #if DEBUG
+      Swift.print("sendEvent")
+      #endif
       var components = URLComponents(string: apiEndpoint)
       components?.queryItems = [
          URLQueryItem(name: "api_secret", value: apiSecret), // Optional, for authenticated hits, I think gtag flavour requires apisecret ref: https://github.com/adswerve/GA4-Measurement-Protocol-Apple-tvOS/blob/main/Example/tvOSTestApp/tvOSTestApp/GA4MPClient.swift
@@ -53,7 +57,7 @@ public class Tracker {
          client_id: Payload.randomNumberAndTimestamp(uuidStr: clientID),
          // user_id: UUID().uuidString,
          events: events,
-         user_properties: userProps,
+         /*user_properties: userProps,*/
          non_personalized_ads: false
       )
       let data: Data? = try? JSONEncoder().encode(payload)

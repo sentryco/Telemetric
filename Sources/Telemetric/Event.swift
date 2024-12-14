@@ -60,6 +60,7 @@ extension Event {
    }
    /**
     * Event.pageView()
+    * - Note: Page view counts as user engament in GA4
     * - Parameters:
     *   - pageTitle: - Fixme: ⚠️️ add doc
     *   - pageLocation: - Fixme: ⚠️️ add doc

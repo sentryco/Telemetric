@@ -26,7 +26,7 @@ public struct Payload: Codable {
     * - Note: User Properties (Optional)
     * - Note: These are attributes that describe the user. Each hit can have up to 25 user properties.
     */
-   public let user_properties: [String: String]
+   // public let user_properties: [String: String]
    /**
     * - Fixme: ⚠️️ add doc
     */
@@ -45,10 +45,10 @@ public struct Payload: Codable {
     *   - user_properties: - Fixme: ⚠️️ add doc
     *   - non_personalized_ads: - Fixme: ⚠️️ add doc
     */
-   public init(client_id: String, events: [Event], user_properties: [String : String], non_personalized_ads: Bool) {
+   public init(client_id: String, events: [Event], /*user_properties: [String : String],*/ non_personalized_ads: Bool) {
       self.client_id = client_id
       self.events = events
-      self.user_properties = user_properties
+      //self.user_properties = user_properties
       self.non_personalized_ads = non_personalized_ads
    }
 }
