@@ -92,12 +92,14 @@ extension EventCollector {
       if !self.events.isEmpty {
          self.onSend?(events)
          self.events.removeAll()
-         
-         // Stop the timer when the events array is emptied
-         stopTimer()
       }
+      stopTimer()
    }
-   
+}
+/**
+ * Timer
+ */
+extension EventCollector {
    /**
     * Start timer
     */
@@ -108,7 +110,6 @@ extension EventCollector {
             self?.sendEventsToGA4(events: self!.events)
          }
    }
-   
    /**
     * Stop timer
     */
