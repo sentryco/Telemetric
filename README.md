@@ -1,3 +1,5 @@
+[![Tests](https://github.com/sentryco/Telemetric/actions/workflows/Tests.yml/badge.svg)](https://github.com/sentryco/Telemetric/actions/workflows/Tests.yml)
+
 # Telemetric
 
 ### Description:
@@ -11,8 +13,8 @@ Minimal GA4 telemetrics for iOS and macOS.
 
 ### Pre-requsit:
 - Create a free analytics account on [analytics.coogle.com](analytics.coogle.com) Login with your google account
-- Find your Measurment-ID: analytics.coogle.com -> admin -> data collectiion... -> data streams -> tap your website / app -> MeasurmentID
-- Find your API-Secret: analytics.coogle.com -> admin -> data collectiion... -> data streams -> tap your website / app -> Measurement Protocol API secrets
+- Find your Measurment-ID: [analytics.coogle.com](analytics.coogle.com) -> admin -> data collection... -> data streams -> tap your website / app -> MeasurmentID
+- Find your API-Secret: [analytics.coogle.com](analytics.coogle.com) -> admin -> data collection... -> data streams -> tap your website / app -> Measurement Protocol API secrets
 
 ### Examples:
 
@@ -24,7 +26,7 @@ Event.customEvent(title: "view_item_list", key: "item_list_name", value: "Home P
 Event.pageView(engagementTimeMSec: "2400")
 ```
 
-> [!INFORMATION]  
+> [!NOTE]
 > 3 levels of userID tracking:  
 > **vendor:**  Persistent between runs (in most cases)   
 > **userDefault:** Persistent between runs  
@@ -42,7 +44,7 @@ dependencies: [
 > [!IMPORTANT]  
 > For GA4 properties, IP anonymization is always enabled. This means that the last octet of IPv4 user IP addresses and the last 80 bits of IPv6 addresses are set to zeros before any data storage or processing takes place.
 
-### The Google Analytics 4 (GA4) GA4 Measurement Protocol
+### The Google Analytics 4 (GA4) Measurement Protocol
 
 Send various types of data to GA4 via the endpoint `https://www.google-analytics.com/mp/collect`. Here are the main types of data you can send:
 
