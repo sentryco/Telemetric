@@ -1,3 +1,5 @@
+[![Tests](https://github.com/sentryco/Telemetric/actions/workflows/Tests.yml/badge.svg)](https://github.com/sentryco/Telemetric/actions/workflows/Tests.yml)
+
 # Telemetric
 
 ### Description:
