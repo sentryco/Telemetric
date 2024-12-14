@@ -24,7 +24,7 @@ Event.customEvent(title: "view_item_list", key: "item_list_name", value: "Home P
 Event.pageView(engagementTimeMSec: "2400")
 ```
 
-> [!INFORMATION]  
+> [!NOTE]
 > 3 levels of userID tracking:  
 > **vendor:**  Persistent between runs (in most cases)   
 > **userDefault:** Persistent between runs  
