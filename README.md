@@ -7,10 +7,10 @@
 Minimal GA4 telemetrics for iOS and macOS. 
 
 ### Problem:
-- Utilizing GA4 in Swift requires the FirebaseSDK. However, FirebaseInstanceID, responsible for handling user-ids, is closed source. This lack of transparency can be concerning, especially considering potential violations of Apple's stringent user identification rules.
+Utilizing GA4 in Swift requires the FirebaseSDK. However, FirebaseInstanceID, responsible for handling user-ids, is closed source. This lack of transparency can be concerning, especially considering potential violations of Apple's stringent user identification rules.
 
 ### Solution:
-- This open-source library offers a solution. It performs the same functions as the FirebaseSDK, but with the added benefit of transparency. You can see exactly how personal identification is handled and even adjust it to a level you're comfortable with.
+This open-source library offers a solution. It performs the same functions as the FirebaseSDK, but with the added benefit of transparency. You can see exactly how personal identification is handled and even adjust it to a level you're comfortable with.
 
 ### Features:
 - Bulk send events to google analytics 4
