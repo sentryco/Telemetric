@@ -1,12 +1,38 @@
 import XCTest
 import Telemetric
 
+// ⚠️️ Discard this before push
+let measurementID: String = ""
+let apiSecret: String = ""
+
+public class Telemetric: TelemetricKind {
+   static let shared: Telemetric = .init()
+   let tracker = GA4Tracker(measurementID: measurementID, apiSecret: apiSecret)
+   public lazy var collector = EventCollector(batchSize: 4, maxAgeSeconds: 10) { events in
+      self.tracker.sendEvent(events: events)
+   }
+}
+
 class TelemetricTests: XCTestCase {
+   /**
+    * batching. Send on x reached, or every 24h
+    */
+   func testBatching() throws {
+      Telemetric.shared.send(
+         event: Event(name: "event1", params: ["key": "value"])
+      )
+      Telemetric.shared.send(
+         event: Event(name: "event2", params: ["key": 100])
+      )
+      Swift.print("⚠️️ wait")
+      sleep(15) // Wait for 20 seconds to let async calls complete
+      Swift.print("✅ timer up")
+   }
    /**
     * Example usage
     */
    func testExample() throws {
-      let tracker = GA4Tracker(measurementID: "", apiSecret: "")
+      let tracker = GA4Tracker(measurementID: measurementID, apiSecret: apiSecret)
       // Create an expectation for a background download task.
       let expectation = self.expectation(description: "Send event")
       let events: [Event] = [

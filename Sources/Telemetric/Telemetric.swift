@@ -40,7 +40,7 @@ public class GA4Tracker {
     *   - userProps: - Fixme: ⚠️️ add doc
     *   - complete: - Fixme: ⚠️️ add doc
     */
-   public func sendEvent(events: [Event], userProps: [String: String], complete: ((Bool) -> Void)? = nil) {
+   public func sendEvent(events: [Event], userProps: [String: String] = [:], complete: ((Bool) -> Void)? = nil) {
       var components = URLComponents(string: apiEndpoint)
       components?.queryItems = [
          URLQueryItem(name: "api_secret", value: apiSecret), // Optional, for authenticated hits, I think gtag flavour requires apisecret ref: https://github.com/adswerve/GA4-Measurement-Protocol-Apple-tvOS/blob/main/Example/tvOSTestApp/tvOSTestApp/GA4MPClient.swift

@@ -1,4 +1,5 @@
 [![Tests](https://github.com/sentryco/Telemetric/actions/workflows/Tests.yml/badge.svg)](https://github.com/sentryco/Telemetric/actions/workflows/Tests.yml)
+[![codebeat badge](https://codebeat.co/badges/7079731f-6d84-4a37-9713-2f29c65d1f05)](https://codebeat.co/projects/github-com-sentryco-telemetric-main)
 
 # Telemetric
 
@@ -81,10 +82,11 @@ Send various types of data to GA4 via the endpoint `https://www.google-analytics
 By utilizing these various data types effectively, you can gain comprehensive insights into user behavior and interactions on your platforms.
 
 ### Gotchas:
+- The post body of the request must be smaller than 130kB
+- Each request can have a maximum of 25 events.  100 (GA4 360)
+- Each event can have a maximum of 25 parameters 100 (GA4 360)
 - Parameter names must be 40 characters or fewer, can only contain alpha-numeric characters and underscores, and must start with an alphabetic character.
 - Parameter values must be 100 characters or fewer for standard GA4 properties and 500 characters or fewer for GA4 360 properties
-- Each request can have a maximum of 25 events.
-- Each event can have a maximum of 25 parameters
 - User property names must be 24 characters or fewer.
 - User property values must be 36 characters or fewer
 - Append  "debug_mode": 1, // or "debug_mode": true to event params to use GA4 Debugging Information
@@ -105,3 +107,4 @@ By utilizing these various data types effectively, you can gain comprehensive in
 - Figure out how to use: Measurement ID: The unique identifier for your GA4 property. text tid=G-EMPR3SY5D5
 - Add support for user_id (track user across devices and apps)
 - Figure out how to inject apikey and ma-id from github secrets, so that unit-tests works
+- make an assert to make sure posts are less than max allowed at 130kB
