@@ -63,18 +63,15 @@ extension EventCollector {
             self?.sendEventsToGA4(events: collectedEvents)
          }
          .store(in: &cancellables)
-      // Also send any remaining events after 24 hours if not already sent
-      Timer.publish(every: maxAgeSeconds, on: .main, in: .common)
-         .autoconnect()
-         .sink { [weak self] _ in
-            self?.sendEventsToGA4(events: self!.events)
-         }
-         .store(in: &cancellables)
+      startTimer()
    }
    /**
     * Track event
     */
    public func trackEvent(_ event: Event) {
+      #if DEBUG
+      Swift.print("trackEvent")
+      #endif
       events.append(event)
       eventPublisher.send(event) // Send the event to the publisher
       // Start the timer if it's not already running
@@ -93,7 +90,9 @@ extension EventCollector {
          self.onSend?(events)
          self.events.removeAll()
       }
-      stopTimer()
+      if self.events.isEmpty {
+         stopTimer()
+      }
    }
 }
 /**
@@ -104,16 +103,29 @@ extension EventCollector {
     * Start timer
     */
    private func startTimer() {
+      #if DEBUG
+      Swift.print("startTimer")
+      #endif
+      // Also send any remaining events after 24 hours if not already sent
       timer = Timer.publish(every: maxAgeSeconds, on: .main, in: .common)
          .autoconnect()
          .sink { [weak self] _ in
             self?.sendEventsToGA4(events: self!.events)
          }
+      //         .store(in: &cancellables)
+//      timer = Timer.publish(every: maxAgeSeconds, on: .main, in: .common)
+//         .autoconnect()
+//         .sink { [weak self] _ in
+//            self?.sendEventsToGA4(events: self!.events)
+//         }
    }
    /**
     * Stop timer
     */
    private func stopTimer() {
+      #if DEBUG
+      Swift.print("stopTimer")
+      #endif
       timer?.cancel()
       timer = nil
    }
