@@ -12,9 +12,9 @@ Minimal GA4 telemetrics for iOS and macOS.
 ### Solution:
 - This open-source library offers a solution. It performs the same functions as the FirebaseSDK, but with the added benefit of transparency. You can see exactly how personal identification is handled and even adjust it to a level you're comfortable with.
 
-### Pre-requsit:
+### Pre-requisite:
 - Create a free analytics account on [analytics.coogle.com](analytics.coogle.com) Login with your google account
-- Find your Measurment-ID: [analytics.coogle.com](analytics.coogle.com) -> admin -> data collection... -> data streams -> tap your website / app -> MeasurmentID
+- Find your Measurement-ID: [analytics.coogle.com](analytics.coogle.com) -> admin -> data collection... -> data streams -> tap your website / app -> MeasurementID
 - Find your API-Secret: [analytics.coogle.com](analytics.coogle.com) -> admin -> data collection... -> data streams -> tap your website / app -> Measurement Protocol API secrets
 
 ### Ping:
@@ -28,7 +28,7 @@ Event.pageView(engagementTimeMSec: "2400")
 ```
 
 ### Batch ping:
-Conserve resources by inteligently batch process the pings when the system deems it convenient
+Conserve resources by intelligently batch processing the pings when the system deems it convenient
 ```swift
 // You make your own class with the config you want. 
 class Telemetric: TelemetricKind {
@@ -43,8 +43,8 @@ class Telemetric: TelemetricKind {
    }
 }
 // This will be processed after 3 minutes
-// or immediatly if app closed or goes into the background
-// or immediatly if 8 additional events are added to the stack
+// or immediately if app closed or goes into the background
+// or immediately if 8 additional events are added to the stack
 Telemetric.shared.send(events: [ // bulk
    Event(name: "event3", params: ["flagging": false]),
    Event(name: "event4", params: ["fiat": 100])
@@ -114,7 +114,7 @@ By utilizing these various data types effectively, you can gain comprehensive in
 - The post body of the request must be smaller than 130kB
 - Each request can have a maximum of 25 events.  100 (GA4 360)
 - Each event can have a maximum of 25 parameters 100 (GA4 360)
-- Parameter names must be 40 characters or fewer, can only contain alpha-numeric characters and underscores, and must start with an alphabetic character.
+- Parameter names must be 40 characters or fewer, can only contain alpha-numeric characters and underscores, and must start with an alphabetical character.
 - Parameter values must be 100 characters or fewer for standard GA4 properties and 500 characters or fewer for GA4 360 properties
 - User property names must be 24 characters or fewer.
 - User property values must be 36 characters or fewer
