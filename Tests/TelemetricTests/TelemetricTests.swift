@@ -8,7 +8,7 @@ let apiSecret: String = ""
 public class Telemetric: TelemetricKind {
    static let shared: Telemetric = .init()
    let tracker = Tracker(measurementID: measurementID, apiSecret: apiSecret)
-   public lazy var collector = EventCollector(batchSize: 4, maxAgeSeconds: 10) { events in
+   public lazy var collector = EventCollector(batchSize: 4, maxAgeSeconds: 5) { events in
       self.tracker.sendEvent(events: events)
    }
 }
@@ -26,9 +26,13 @@ class TelemetricTests: XCTestCase {
          Event(name: "event3", params: ["flagging": false]),
          Event(name: "event4", params: ["fiat": 100])
       ])
+      Telemetric.shared.send(event: Event.pageView())
       Swift.print("⚠️️ wait")
       sleep(15) // Wait for 20 seconds to let async calls complete
       Swift.print("⏰ timer up")
+      Telemetric.shared.send(event: Event.pageView())
+      sleep(10)
+      Swift.print("🏁 all done")
    }
    /**
     * Example usage
@@ -53,7 +57,7 @@ class TelemetricTests: XCTestCase {
       //    "user_total_purchases": "43"
       // ]
       // Send event and fulfill expectation in completion handler
-      tracker.sendEvent(events: events, userProps: [:]) {_ in
+      tracker.sendEvent(events: events/*, userProps: [:]*/) {_ in
          expectation.fulfill()
       }
       // Wait for the expectation to be fulfilled
@@ -68,7 +72,7 @@ class TelemetricTests: XCTestCase {
          client_id: UUID().uuidString,
          // user_id: UUID().uuidString,
          events: [Event.pageView()],
-         user_properties: [:],
+//         user_properties: [:],
          non_personalized_ads: false
       )
       do {
@@ -97,7 +101,7 @@ class TelemetricTests: XCTestCase {
             "values_price": 100,
          ]
       )
-      let payload = Payload(client_id: "12345", /*user_id: "user123",*/ events: [event], user_properties: ["property1": "value1"], non_personalized_ads: false)
+      let payload = Payload(client_id: "12345", /*user_id: "user123",*/ events: [event], /*user_properties: ["property1": "value1"],*/ non_personalized_ads: false)
       
       do {
          // Encode the Payload instance to JSON data
