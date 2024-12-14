@@ -30,7 +30,7 @@ let tracker = Tracker(measurementID: "G-XXXXXXXXXX", apiSecret: "YYYYYYYYYYYYYYY
 // Track events (The modern way to track)
 Event.customEvent(title: "view_item_list", key: "item_list_name", value: "Home Page"),
 // Track page-views (like legacy UA in GA3)
-Event.pageView(engagementTimeMSec: "2400")
+Event.pageView(engagementTimeMSec: "2400") // Use page-view to trigger user-engagment event in GA4
 ```
 
 ### Batch ping:
