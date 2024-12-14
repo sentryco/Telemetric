@@ -12,6 +12,12 @@ Minimal GA4 telemetrics for iOS and macOS.
 ### Solution:
 - This open-source library offers a solution. It performs the same functions as the FirebaseSDK, but with the added benefit of transparency. You can see exactly how personal identification is handled and even adjust it to a level you're comfortable with.
 
+### Features:
+- Bulk send events to google analytics 4
+- Cache events and batch processes pings to preserve resources
+- 3 Levels of user-id persistency. vendor, userDefault and keychain
+- GA4 formated clientID with UUID and Date in the identification 
+
 ### Pre-requisite:
 - Create a free analytics account on [analytics.coogle.com](analytics.coogle.com) Login with your google account
 - Find your Measurement-ID: [analytics.coogle.com](analytics.coogle.com) -> admin -> data collection... -> data streams -> tap your website / app -> MeasurementID
