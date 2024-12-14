@@ -82,6 +82,7 @@ extension EventCollector {
    }
    /**
     * Send event to GA4
+    * - Fixme: ⚠️️ rename to sendBatchAndReset?
     * - Parameter events: - Fixme: ⚠️️ add doc
     */
    private func sendEventsToGA4(events: [Event]) {

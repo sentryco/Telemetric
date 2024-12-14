@@ -20,20 +20,16 @@ Minimal GA4 telemetrics for iOS and macOS.
 ### Examples:
 
 ```swift
-let tracker = GA4Tracker(measurementID: "G-XXXXXXXXXX", apiSecret: "YYYYYYYYYYYYYYYY")
+let tracker = Tracker(measurementID: "G-XXXXXXXXXX", apiSecret: "YYYYYYYYYYYYYYYY")
 // Track events (The modern way to track)
 Event.customEvent(title: "view_item_list", key: "item_list_name", value: "Home Page"),
 // Track page-views (like legacy UA in GA3)
 Event.pageView(engagementTimeMSec: "2400")
 ```
 
-> [!NOTE]
-> 3 levels of userID tracking:  
-> **vendor:**  Persistent between runs (in most cases)   
-> **userDefault:** Persistent between runs  
-> **keychain:** Persistent between installs   
-
-
+> [!CAUTION]  
+> Google analytics for dashboards are sometimes very responsive, and sometimes events show up later.
+ 
 ### Swift Package Manager Installation
 
 ```swift
@@ -42,8 +38,11 @@ dependencies: [
 ]
 ```
 
-> [!IMPORTANT]  
-> For GA4 properties, IP anonymization is always enabled. This means that the last octet of IPv4 user IP addresses and the last 80 bits of IPv6 addresses are set to zeros before any data storage or processing takes place.
+> [!NOTE]
+> 3 levels of userID tracking:  
+> **vendor:**  Persistent between runs (in most cases)   
+> **userDefault:** Persistent between runs  
+> **keychain:** Persistent between installs  
 
 ### The Google Analytics 4 (GA4) Measurement Protocol
 
@@ -80,6 +79,9 @@ Send various types of data to GA4 via the endpoint `https://www.google-analytics
 - **Rate Limits**: Be aware of any rate limits imposed by Google Analytics for data collection.
 
 By utilizing these various data types effectively, you can gain comprehensive insights into user behavior and interactions on your platforms.
+
+> [!IMPORTANT]  
+> For GA4 properties, IP anonymization is always enabled. This means that the last octet of IPv4 user IP addresses and the last 80 bits of IPv6 addresses are set to zeros before any data storage or processing takes place.
 
 ### Gotchas:
 - The post body of the request must be smaller than 130kB

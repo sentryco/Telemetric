@@ -44,7 +44,7 @@ extension Identity {
     * Vendor identifier source.
     * - Remark: Changes on every simulator run etc (allegedly) - Fixme: ⚠️️ confirm this
     * - Remark: Should persist between release app runs, but beta apps might generate new UUID.
-    * - Remark: The MAC doesn't have anything equivalent to iOS's identifierForVendor or advertising Id alas.
+    * - Remark: The MAC doesn't have anything equivalent to iOS's identifierForVendor or advertising Id alas.*
     * - Fixme: ⚠️️ for swift 6.0 we will need to fence UIDevice in serlialized main thread. Check with copilot etc
     */
    fileprivate static var vendorID: String? {
@@ -105,7 +105,7 @@ extension Identity {
     * - Remark: Does not persist OS reset/reinstall. But will persist OS updates and transfers to new phone,
     * - Remark: As long as the bundle identifier remains the same this will persist
     * - Remark: And no, the key will not be synchronized to iCloud by default
-    * - Remark: Keychain works with console-unit-tests
+    * - Remark: Keychain works with console-unit-tests, but prompts the user for password, so github actions might be diffult to test with 
     * - Note: For more information, refer to the following links:
     *   - https://stackoverflow.com/questions/41016762/how-to-generate-unique-id-of-device-for-iphone-ipad-using-objective-c/41017285#41017285
     *   - https://github.com/fabiocaccamo/FCUUID

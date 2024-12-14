@@ -1,43 +1,48 @@
 import XCTest
-import Telemetric
+@testable import Telemetric
 
-// ⚠️️ Discard this before push
+// ⚠️️ Discard this before push, or squash if you forget
 let measurementID: String = ""
 let apiSecret: String = ""
 
 public class Telemetric: TelemetricKind {
    static let shared: Telemetric = .init()
-   let tracker = GA4Tracker(measurementID: measurementID, apiSecret: apiSecret)
+   let tracker = Tracker(measurementID: measurementID, apiSecret: apiSecret)
    public lazy var collector = EventCollector(batchSize: 4, maxAgeSeconds: 10) { events in
       self.tracker.sendEvent(events: events)
    }
 }
 
 class TelemetricTests: XCTestCase {
+   func testUserID() {
+      let clientID = Identity.uniqueUserIdentifier(type: .userdefault)
+      let client_id = Payload.randomNumberAndTimestamp(uuidStr: clientID)
+      Swift.print("client_id:  \(client_id)")
+   }
    /**
     * batching. Send on x reached, or every 24h
     */
    func testBatching() throws {
       Telemetric.shared.send(
-         event: Event(name: "event1", params: ["key": "value"])
+         event: Event(name: "event1", params: ["flag": false])
       )
       Telemetric.shared.send(
-         event: Event(name: "event2", params: ["key": 100])
+         event: Event(name: "event2", params: ["money": 100])
       )
       Swift.print("⚠️️ wait")
       sleep(15) // Wait for 20 seconds to let async calls complete
-      Swift.print("✅ timer up")
+      Swift.print("⏰ timer up")
    }
    /**
     * Example usage
     */
    func testExample() throws {
-      let tracker = GA4Tracker(measurementID: measurementID, apiSecret: apiSecret)
+      let tracker = Tracker(measurementID: measurementID, apiSecret: apiSecret)
       // Create an expectation for a background download task.
       let expectation = self.expectation(description: "Send event")
       let events: [Event] = [
          Event(
-            name: "game_start",
+            name: "game_continue",
             params: [
                "action": "message shown",
                "label": "current_url"

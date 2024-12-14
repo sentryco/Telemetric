@@ -1,8 +1,8 @@
 import Foundation
 /**
- * - Fixme: ⚠️️ Change name to Telemetric?
+ * The google analytics 4 tracker
  */
-public class GA4Tracker {
+public class Tracker {
    /**
     * Measurement ID
     */
