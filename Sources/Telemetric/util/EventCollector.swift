@@ -11,6 +11,7 @@ import AppKit
  * - Note: Batch sends events on interval when elapsed time is reached, regardless of batchsize
  * - Note: Batch sends events when iOS apps enters background and before a macOS app closes (as macOS apps doesnt have a background state)
  * - Fixme: ⚠️️ potentiallyy also add elapsed time persistence in userdefault? requires handling our own timer and storing events in userdefault. so less optimal
+ * - Fixme: ⚠️️ Rename to something else? Eventbatcher? eventcacher? ask copilot?
  */
 public class EventCollector {
    #if os(iOS)
@@ -23,6 +24,7 @@ public class EventCollector {
    private let batchSize: Int
    private let maxAgeSeconds: Double // 24 hours = (86400)
    private let onSend: ((_ event: [Event]) -> Void)?
+   private var timer: AnyCancellable?
    /**
     * Initiate event collector
     * - Parameters:
@@ -71,23 +73,47 @@ extension EventCollector {
    }
    /**
     * Track event
-    * - Parameter event: - Fixme: ⚠️️ add doc
     */
    public func trackEvent(_ event: Event) {
       events.append(event)
       eventPublisher.send(event) // Send the event to the publisher
+      
+      // Start the timer if it's not already running
+      if timer == nil {
+         startTimer()
+      }
    }
    /**
     * Send event to GA4
-    * - Fixme: ⚠️️ rename to sendBatchAndReset?
-    * - Parameter events: - Fixme: ⚠️️ add doc
     */
    private func sendEventsToGA4(events: [Event]) {
       Swift.print("sendEventsToGA4 - events.isEmpty: \(self.events.isEmpty)")
       if !self.events.isEmpty {
          self.onSend?(events)
          self.events.removeAll()
+         
+         // Stop the timer when the events array is emptied
+         stopTimer()
       }
+   }
+   
+   /**
+    * Start timer
+    */
+   private func startTimer() {
+      timer = Timer.publish(every: maxAgeSeconds, on: .main, in: .common)
+         .autoconnect()
+         .sink { [weak self] _ in
+            self?.sendEventsToGA4(events: self!.events)
+         }
+   }
+   
+   /**
+    * Stop timer
+    */
+   private func stopTimer() {
+      timer?.cancel()
+      timer = nil
    }
 }
 /**
