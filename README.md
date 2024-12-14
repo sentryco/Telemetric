@@ -44,7 +44,7 @@ dependencies: [
 > [!IMPORTANT]  
 > For GA4 properties, IP anonymization is always enabled. This means that the last octet of IPv4 user IP addresses and the last 80 bits of IPv6 addresses are set to zeros before any data storage or processing takes place.
 
-### The Google Analytics 4 (GA4) GA4 Measurement Protocol
+### The Google Analytics 4 (GA4) Measurement Protocol
 
 Send various types of data to GA4 via the endpoint `https://www.google-analytics.com/mp/collect`. Here are the main types of data you can send:
 
