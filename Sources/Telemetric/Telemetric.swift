@@ -1,73 +1,87 @@
 import Foundation
 
-class GA4Tracker {
+public class GA4Tracker {
+   /**
+    * Measurement ID
+    */
    let measurementID: String
+   /**
+    * API secret
+    */
    let apiSecret: String?
    /**
-    * - Note: ga4 endpoint: https://www.google-analytics.com/g/collect
-    * - Note: endPointValidation: https://www.google-analytics.com/debug/mp/collect
-    * - Note: Debug: "https://www.google-analytics.com/debug/mp/collect"
+    * End point
     */
-   let apiEndpoint = "https://www.google-analytics.com/mp/collect" // "https://www.google-analytics.com/g/collect" 
-   init(measurementID: String, apiSecret: String? = nil) {
+   let apiEndpoint: String
+   /**
+    * client id
+    */
+   let clientID: String
+   /**
+    * Init
+    * - Parameters:
+    *   - measurementID: - Fixme: ⚠️️ add doc
+    *   - apiSecret: - Fixme: ⚠️️ add doc
+    *   - apiEndpoint: - Fixme: ⚠️️ add doc
+    */
+   public init(measurementID: String, apiSecret: String? = nil, apiEndpoint: String = "https://www.google-analytics.com/mp/collect", clientID: String = defaultClientID) {
       self.measurementID = measurementID
       self.apiSecret = apiSecret
+      self.apiEndpoint = apiEndpoint
+      self.clientID = clientID
    }
    /**
     * - Note: url: https://www.google-analytics.com/mp/collect?measurement_id=G-EMPR3SY5D5&api_secret=YOUR_API_SECRET
+    * - Parameters:
+    *   - events: - Fixme: ⚠️️ add doc
+    *   - userProps: - Fixme: ⚠️️ add doc
+    *   - complete: - Fixme: ⚠️️ add doc
     */
-   func sendEvent(events: [Event], userProps: [String: String], complete: ((Bool) -> Void)? = nil) {
-//      Swift.print("sendEvent")
+   public func sendEvent(events: [Event], userProps: [String: String], complete: ((Bool) -> Void)? = nil) {
       var components = URLComponents(string: apiEndpoint)
       components?.queryItems = [
          URLQueryItem(name: "api_secret", value: apiSecret), // Optional, for authenticated hits, I think gtag flavour requires apisecret ref: https://github.com/adswerve/GA4-Measurement-Protocol-Apple-tvOS/blob/main/Example/tvOSTestApp/tvOSTestApp/GA4MPClient.swift
          URLQueryItem(name: "measurement_id", value: measurementID),
       ]
       guard let url = components?.url else { return }
-//      Swift.print("url.absoluteString:  \(url.absoluteString)")
       var request = URLRequest(url: url, cachePolicy: .useProtocolCachePolicy)
       request.httpMethod = "POST"
       let payload: Payload = .init(
-         client_id: UUID().uuidString, /*"1234.1234"*/ // "1234567890.0987654321" // UUID().uuidString, /*""*//*"1234567890.0987654321"*/ // - Fixme: ⚠️️ try UUID().uuidString here as well?
-         user_id: UUID().uuidString,
-         events: events,//,//,//,
+         client_id: Payload.randomNumberAndTimestamp(uuidStr: clientID),
+         // user_id: UUID().uuidString,
+         events: events,
          user_properties: userProps,
          non_personalized_ads: false
       )
-//      let data = try? JSONSerialization.data(withJSONObject: payload, options: [])
       let data: Data? = try? JSONEncoder().encode(payload)
       request.httpBody = data
       request.setValue("application/json", forHTTPHeaderField: "Content-Type")
       URLSession.shared.dataTask(with: request) { (data, response, error) in
          if let error = error {
+            #if DEBUG
             print("🚫 Error: \(error)")
+            #endif
             complete?(false)
          }
          if let response = response {
-//            print("Response: \(response)")
             if let response = response as? HTTPURLResponse {
                let statusCode = response.statusCode
                if statusCode >= 500 {
+                  #if DEBUG
                   print("🚫 Server error (\(statusCode))' upload")
+                  #endif
                   // - Fixme: ⚠️️ Implement backoff and retry logic
                   complete?(false)
-               } else {
-                  // presumed success
+               } else { // presumed success
+                  #if DEBUG
                   print("✅ Successful upload. Status code: \(statusCode)")
+                  #endif
                   complete?(true)
                }
             }
          }
-//         if let data = data {
-//            let str = String(data: data, encoding: .utf8)
-////            print("👇 Received data:\n\(str ?? "")")
-////            print("data.count: \(data.count)")
-//            if data.count > 0 {
-//               Swift.print("data downloaded: \(data.count)")
-//               Swift.print("str:  \(String(describing: str))")
-//            }
-//            complete?(true)
-//         }
       }.resume()
    }
 }
+// keeping this here avoids exposing Identity api
+public var defaultClientID: String = Identity.uniqueUserIdentifier(type: .userdefault)
