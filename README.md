@@ -13,10 +13,10 @@ Utilizing GA4 in Swift requires the FirebaseSDK. However, FirebaseInstanceID, re
 This open-source library offers a solution. It performs the same functions as the FirebaseSDK, but with the added benefit of transparency. You can see exactly how personal identification is handled and even adjust it to a level you're comfortable with.
 
 ### Features:
-- Bulk send events to google analytics 4
-- Cache events and batch processes pings to preserve resources
-- 3 Levels of user-id persistency. vendor, userDefault and keychain
-- GA4 formated clientID with UUID and Date in the identification 
+- Enables bulk sending of events to Google Analytics 4
+- Caches events and processes pings in batches to optimize resource usage
+- Provides three levels of user-id persistency: vendor, userDefault, and keychain
+- Formats the GA4 clientID with UUID and Date for unique identification 
 
 ### Pre-requisite:
 - Create a free analytics account on [analytics.coogle.com](analytics.coogle.com) Login with your google account
