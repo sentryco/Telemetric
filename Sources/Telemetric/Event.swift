@@ -64,11 +64,11 @@ extension Event {
     * - Parameters:
     *   - pageTitle: - Fixme: ⚠️️ add doc
     *   - pageLocation: - Fixme: ⚠️️ add doc
-    *   - engagementTimeMSec: - Fixme: ⚠️️ add doc
+    *   - engagementTimeMSec: measure session/users You need to include the 'engagement_time_msec' parameter with a value of '1', e.g.:
     *   - pageReferrer: - Fixme: ⚠️️ add doc
     * - Returns: - Fixme: ⚠️️ add doc
     */
-   public static func pageView(pageTitle: String, pageLocation: String? = nil, engagementTimeMSec: String? = nil, pageReferrer: String? = nil, screenResolution: String = System.screenResolution, language: String = System.userLanguage) -> Event {
+   public static func pageView(pageTitle: String, pageLocation: String? = nil, engagementTimeMSec: Any? = nil, pageReferrer: String? = nil, screenResolution: String = System.screenResolution, language: String = System.userLanguage) -> Event {
       .init(
          name: "page_view",
          params: ([
@@ -90,7 +90,7 @@ extension Event {
     *   - engagementTimeMSec: mSec elapsed time
     * - Returns: Event
     */
-   public static func session(name: String, sessionID: String, engagementTimeMSec: String) -> Event {
+   public static func session(name: String, sessionID: String, engagementTimeMSec: Any) -> Event {
       .init(
          name: name,
          params: [
@@ -103,6 +103,9 @@ extension Event {
     * - Fixme: ⚠️️ add doc
     * - Note: This is optional. As we don't want to create a stop event, if no start event was already created for the name
     * - Note: If a start event is already made for the name, it will be overwritten with a new start time
+    * - Note: The "engagement_time_msec" parameter should contain the engagement time of the event in milliseconds. Here are the key points about this parameter:
+    * - Note: It represents the amount of time a user has actively engaged with your site or app since the last event was sent
+    * - Note: If you're unsure about the exact engagement time or just want to ensure the event is recorded, you can set it to a minimal value like "1"
     */
    @discardableResult
    public static func session(name: String, isStarting: Bool) -> Event? {
@@ -114,7 +117,7 @@ extension Event {
       return Event.session(
          name: name,
          sessionID: sessionID,
-         engagementTimeMSec: String(elapsedTime)
+         engagementTimeMSec: elapsedTime // 1 // String(elapsedTime) // "1"
       )
    }
    /**
