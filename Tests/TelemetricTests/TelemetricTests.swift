@@ -104,8 +104,9 @@ class TelemetricTests: XCTestCase {
                "color": 3
             ]
          ),
+         Event.exception(description: "Bug occured", isFatal: true),
          Event.customEvent(title: "view_item_list", key: "item_list_name", value: "Home Page"),
-         Event.pageView(pageTitle: "prefs_page", engagementTimeMSec: "2400")
+         Event.pageView(pageTitle: "prefs_page", engagementTimeMSec: 3200)
       ]
       // let userProps: [String: String] =  [
       //    "newsletter_opt_in": "yes",
