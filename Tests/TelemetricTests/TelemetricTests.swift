@@ -15,9 +15,14 @@ public class Telemetric: TelemetricKind {
 }
 class TelemetricTests: XCTestCase {
    func testException() throws {
-      let tracker = Tracker(measurementID: measurementID, apiSecret: apiSecret, clientID: Identity.uniqueUserIdentifier(type: .vendor))
+      let tracker = Tracker(
+         measurementID: measurementID,
+         apiSecret: apiSecret,
+//         apiEndpoint: "https://www.google-analytics.com/debug/mp/collect",
+         clientID: Identity.uniqueUserIdentifier(type: .vendor)
+      )
       let expectation = self.expectation(description: "Send esception event")
-      let exceptionEvent = Event.exception(description: "Database unavailable", isFatal: true, userAction: "open app")
+      let exceptionEvent = Event.exception(description: "Database unavailable", isFatal: false, userAction: "open app")
       tracker.sendEvent(event: exceptionEvent) { _ in expectation.fulfill() }
       self.wait(for: [expectation], timeout: 10.0)
    }

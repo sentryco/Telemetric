@@ -130,10 +130,9 @@ extension Event {
     *   - filePath: - Fixme: ⚠️️ add doc
     * - Returns: - Fixme: ⚠️️ add doc
     */
-   public static func exception(name: String = "exception", description: String? = nil, isFatal: Bool? = nil, stackTrace: String? = nil, errorCode: String? = nil, userAction: String? = nil, environment: String? = nil, filePath: String? = nil) -> Event {
-      .init(
-         name: name,
-         params: ([
+   public static func exception(/*name: String = "exception", */description: String? = nil, isFatal: Bool? = nil, stackTrace: String? = nil, errorCode: String? = nil, userAction: String? = nil, environment: String? = nil, filePath: String? = nil) -> Event {
+      exception(params:
+         ([
             "description": description, // "NullPointerException in MainActivity"
             "fatal": isFatal, // // true or false
             "stack_trace": stackTrace, // "java.lang.NullPointerException: Attempt to invoke...",
@@ -142,6 +141,15 @@ extension Event {
             "environment": environment,
             "file_path": filePath // "/user/data/input.txt",
          ] as [String: Any?]).compactMapValues { $0 }
+      )
+   }
+   /**
+    * - Fixme: ⚠️️ add doc
+    */
+   public static func exception(params: [String: Any]) -> Event {
+      .init(
+         name: "exception",
+         params: params
       )
    }
 }

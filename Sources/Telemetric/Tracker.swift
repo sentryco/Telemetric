@@ -102,14 +102,16 @@ public class Tracker {
             }
          }
          // This has debug info if payload is in the wrong format or is incorrect. If the debug endpont is used
-//         #if DEBUG
-         // Swift.print("data?.count:  \(String(describing: data?.count))")
-//         if let data = data, let string = String(data: data, encoding: .utf8) {
-//            print("String: \(string)")
-//         } else {
-//            print("Data is nil or not a valid UTF-8 encoded string")
-//         }
-//         #endif
+         #if DEBUG
+         if self.apiEndpoint == "https://www.google-analytics.com/debug/mp/collect" {
+            Swift.print("data?.count:  \(String(describing: data?.count))")
+            if let data = data, let string = String(data: data, encoding: .utf8) {
+               print("String: \(string)")
+            } else {
+               print("Data is nil or not a valid UTF-8 encoded string")
+            }
+         }
+         #endif
       }.resume()
    }
 }
