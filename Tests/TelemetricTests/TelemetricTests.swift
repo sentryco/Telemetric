@@ -50,7 +50,13 @@ class TelemetricTests: XCTestCase {
     * Example usage
     */
    func testExample() throws {
-      let tracker = Tracker(measurementID: measurementID, apiSecret: apiSecret, clientID: Identity.uniqueUserIdentifier(type: .vendor))
+      let tracker = Tracker(
+         measurementID: measurementID,
+         apiSecret: apiSecret,
+         // This endpoint will return validation messages if there are any issues with your payload
+         apiEndpoint: "https://www.google-analytics.com/debug/mp/collect",
+         clientID: Identity.uniqueUserIdentifier(type: .vendor)
+      )
       // Create an expectation for a background download task.
       let expectation = self.expectation(description: "Send event")
       let events: [Event] = [
@@ -58,7 +64,8 @@ class TelemetricTests: XCTestCase {
             name: "game_continue",
             params: [
                "action": "message shown",
-               "label": "current_url"
+               "label": false,
+               "color": 3
             ]
          ),
          Event.customEvent(title: "view_item_list", key: "item_list_name", value: "Home Page"),
