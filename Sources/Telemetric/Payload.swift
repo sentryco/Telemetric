@@ -16,6 +16,7 @@ public struct Payload: Codable {
    // public let user_id: String
    /**
     * An array containing the event details
+    * - Note: (required)
     */
    let events: [Event]
    /**
@@ -28,7 +29,8 @@ public struct Payload: Codable {
     */
    // public let user_properties: [String: String]
    /**
-    * - Fixme: ⚠️️ add doc
+    * Boolean indicating whether to restrict this data for use in personalized advertising.
+    * - Note: (optional)
     */
    let non_personalized_ads: Bool
    /**
@@ -38,9 +40,11 @@ public struct Payload: Codable {
     */
    // let v: String = "2"
    /**
+    * - Descripion: Timestamp of the event in microseconds. If omitted, GA4 will use the server's time.
     * - Note: Remember to include the timestamp_micros parameter if the event is sent with a delay
     * - Note: Must be within 72 hours of the current time when sending the request
     * - Note: this is needed for session to work
+    * - Note: (optional)
     */
    let timestamp_micros: String
    /**

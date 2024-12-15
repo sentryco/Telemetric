@@ -14,6 +14,13 @@ public class Telemetric: TelemetricKind {
    }
 }
 class TelemetricTests: XCTestCase {
+   func testException() throws {
+      let tracker = Tracker(measurementID: measurementID, apiSecret: apiSecret, clientID: Identity.uniqueUserIdentifier(type: .vendor))
+      let expectation = self.expectation(description: "Send esception event")
+      let exceptionEvent = Event.exception(description: "Database unavailable", isFatal: true, userAction: "open app")
+      tracker.sendEvent(event: exceptionEvent) { _ in expectation.fulfill() }
+      self.wait(for: [expectation], timeout: 10.0)
+   }
    func testRandomString() throws {
       let randomWord: String = String((0..<Int.random(in: 2...20)).map { _ in Character(UnicodeScalar(Int.random(in: 97...122))!) })
       Swift.print("randomWord:  \(randomWord)")
@@ -36,15 +43,18 @@ class TelemetricTests: XCTestCase {
    }
    func testSession() throws {
       let tracker = Tracker(measurementID: measurementID, apiSecret: apiSecret, clientID: Identity.uniqueUserIdentifier(type: .vendor))
-      let expectation = self.expectation(description: "Send session event")
+      let expectation = self.expectation(description: "Send start session event")
       let startEvent = Event.session(name: "appActive", isStarting: true)
+      tracker.sendEvent(event: startEvent) { _ in expectation.fulfill() }
       sleep(4)
+      let expectation2 = self.expectation(description: "Send end session event")
       let endEvent = Event.session(name: "appActive", isStarting: false)
-      let events = [startEvent, endEvent].compactMap { $0 }
-      tracker.sendEvent(events: events) { _ in
-         expectation.fulfill()
-      }
-      self.wait(for: [expectation], timeout: 10.0)
+      tracker.sendEvent(event: endEvent) { _ in expectation2.fulfill() }
+//      let events = [startEvent, endEvent].compactMap { $0 }
+//      tracker.sendEvent(events: events) { _ in
+//         expectation.fulfill()
+//      }
+      self.wait(for: [expectation, expectation2], timeout: 10.0)
    }
    func testUserID() throws {
       let clientID = Identity.uniqueUserIdentifier(type: .vendor)
@@ -59,18 +69,18 @@ class TelemetricTests: XCTestCase {
          Event(name: "event3", params: ["flagging": false]),
          Event(name: "event4", params: ["fiat": 100])
       ])
-      Telemetric.shared.send(event: Event.pageView())
+      Telemetric.shared.send(event: Event.pageView(pageTitle: "welcome"))
       Swift.print("⚠️️ wait")
       sleep(15) // Wait for 20 seconds to let async calls complete
       Swift.print("⏰ timer up")
-      Telemetric.shared.send(event: Event.pageView())
+      Telemetric.shared.send(event: Event.pageView(pageTitle: "signup"))
       sleep(10)
       Swift.print("🏁 all done")
    }
    /**
     * Example usage
     */
-   func testExample() throws {
+   func testBulk() throws {
       let tracker = Tracker(
          measurementID: measurementID,
          apiSecret: apiSecret,
@@ -90,7 +100,7 @@ class TelemetricTests: XCTestCase {
             ]
          ),
          Event.customEvent(title: "view_item_list", key: "item_list_name", value: "Home Page"),
-         Event.pageView(engagementTimeMSec: "2400")
+         Event.pageView(pageTitle: "prefs_page", engagementTimeMSec: "2400")
       ]
       // let userProps: [String: String] =  [
       //    "newsletter_opt_in": "yes",
@@ -111,7 +121,7 @@ class TelemetricTests: XCTestCase {
       let payload: Payload = .init(
          client_id: UUID().uuidString,
          // user_id: UUID().uuidString,
-         events: [Event.pageView()],
+         events: [Event.pageView(pageTitle: "main_page")],
 //         user_properties: [:],
          non_personalized_ads: false
       )
@@ -127,7 +137,7 @@ class TelemetricTests: XCTestCase {
       }
    }
    /**
-    * complex struct coding
+    * complex struct coding, bool, numbers etc. GA4 supports this
     */
    /**/fileprivate func testComplexStruct() {
       Swift.print("testComplexStruct")

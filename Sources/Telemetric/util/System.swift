@@ -8,7 +8,7 @@ import Cocoa
  * System class provides access to various system-level properties.
  * - Fixme: Consider moving this to a Bundle extension for better organization.
  */
-internal class System {
+public final class System {
    /**
     * Provides the name of the application as defined in the Bundle.
     */
@@ -43,17 +43,17 @@ internal class System {
     * Provides the preferred language of the user as defined in the system settings.
     * TODO: Consider handling different language formats (e.g., en-US, en-GB).
     */
-   internal static let userLanguage: String = {
+   public static var userLanguage: String {
       guard let locale: String = Locale.preferredLanguages.first, !locale.isEmpty else {
          return "(not set)"
       }
       return locale
-   }()
+   }
    /**
     * Provides the screen resolution of the user's device.
     * - Fixme: ⚠️️ for swift 6.0 we will need to fence UIScreen in serlialized main thread. Check with copilot etc
     */
-   internal static var screenResolution: String {
+   public static var screenResolution: String {
       // Check if the operating system is iOS
       #if os(iOS)
       // Get the size of the screen in native points

@@ -71,6 +71,9 @@ public class Tracker {
          /*user_properties: userProps,*/
          non_personalized_ads: false
       )
+//      #if DEBUG
+//      Swift.print("payload.timestamp_micros:  \(payload.timestamp_micros)")
+//      #endif
       let data: Data? = try? JSONEncoder().encode(payload)
       request.httpBody = data
       request.setValue("application/json", forHTTPHeaderField: "Content-Type")

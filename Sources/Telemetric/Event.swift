@@ -68,22 +68,22 @@ extension Event {
     *   - pageReferrer: - Fixme: ⚠️️ add doc
     * - Returns: - Fixme: ⚠️️ add doc
     */
-   public static func pageView(pageTitle: String = "Home Page", pageLocation: String = "https://www.example.com/home", engagementTimeMSec: String = "1500", pageReferrer: String = "https://www.google.com") -> Event {
+   public static func pageView(pageTitle: String, pageLocation: String? = nil, engagementTimeMSec: String? = nil, pageReferrer: String? = nil, screenResolution: String = System.screenResolution, language: String = System.userLanguage) -> Event {
       .init(
          name: "page_view",
-         params: [
-            "screen_resolution": System.screenResolution, // The resolution of the user's screen
-            "language": System.userLanguage, // The language setting of the user's browser
+         params: ([
+            "screen_resolution": screenResolution, // The resolution of the user's screen
+            "language": language, // The language setting of the user's browser
             "page_location": pageLocation, // The URL of the page viewed
             "page_title": pageTitle, // The title of the page viewed
             "page_referrer": pageReferrer, // The URL of the previous page that referred the user
             "engagement_time_msec": engagementTimeMSec
             // "page_title": "",
-         ]
+         ] as [String: Any?]).compactMapValues { $0 }
       )
    }
    /**
-    * - Fixme: ⚠️️ add doc
+    * Use this if you track elapsed time your self
     * - Parameters:
     *   - name: your_event_name
     *   - sessionID: xxxxxxxxxx (10 digit random string)
@@ -117,6 +117,32 @@ extension Event {
          engagementTimeMSec: String(elapsedTime)
       )
    }
+   /**
+    * - Fixme: ⚠️️ add doc
+    * - Parameters:
+    *   - name: Use "exception" as the name of the event.
+    *   - isFatal:  (optional) A boolean that indicates if the exception was fatal to the execution of the program. A boolean indicating whether the error was fatal to the application. Example: true (if the app crashed) or false (for recoverable errors).
+    *   - description:  (optional) A string that describes the exception. A human-readable description of the error, such as an exception type or error message. Example: "IndexOutOfBoundsException in ListAdapter"
+    *   - stackTrace: - Fixme: ⚠️️ add doc
+    *   - errorCode: - Fixme: ⚠️️ add doc
+    *   - userAction: - Fixme: ⚠️️ add doc
+    *   - environment: - Fixme: ⚠️️ add doc
+    *   - filePath: - Fixme: ⚠️️ add doc
+    * - Returns: - Fixme: ⚠️️ add doc
+    */
+   public static func exception(name: String = "exception", description: String? = nil, isFatal: Bool? = nil, stackTrace: String? = nil, errorCode: String? = nil, userAction: String? = nil, environment: String? = nil, filePath: String? = nil) -> Event {
+      .init(
+         name: name,
+         params: ([
+            "description": description, // "NullPointerException in MainActivity"
+            "fatal": isFatal, // // true or false
+            "stack_trace": stackTrace, // "java.lang.NullPointerException: Attempt to invoke...",
+            "error_code": errorCode, // // "500"
+            "user_action": userAction,
+            "environment": environment,
+            "file_path": filePath // "/user/data/input.txt",
+         ] as [String: Any?]).compactMapValues { $0 }
+      )
+   }
 }
 
- 

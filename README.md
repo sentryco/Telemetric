@@ -70,6 +70,16 @@ sleep(4) // Simulates time elapsed
 tracker.send(event: Event.session(name: "onboarding", isStarting: false)) // end session
 ```
 
+### Exceptions: 
+Use Cases for Exception Tracking
+- Error Logging: Track application-level errors such as uncaught exceptions or server response errors.
+- Debugging: Collect stack traces or error codes for troubleshooting.
+- Crash Monitoring: Identify and categorize fatal errors that cause crashes.
+```swift
+let exceptionEvent = Event.exception(description: "Database unavailable", isFatal: true, userAction: "open app")
+tracker.sendEvent(event: exceptionEvent)
+```
+
 > [!CAUTION]  
 > Google analytics for dashboards are sometimes very responsive, and sometimes events show up later.
  
