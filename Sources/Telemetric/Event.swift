@@ -90,7 +90,7 @@ extension Event {
     *   - engagementTimeMSec: mSec elapsed time
     * - Returns: Event
     */
-   public static func session(name: String, sessionID: String, engagementTimeMSec: String) -> Event? {
+   public static func session(name: String, sessionID: String, engagementTimeMSec: String) -> Event {
       .init(
          name: name,
          params: [
@@ -101,17 +101,21 @@ extension Event {
    }
    /**
     * - Fixme: ⚠️️ add doc
+    * - Note: This is optional. As we don't want to create a stop event, if no start event was already created for the name
+    * - Note: If a start event is already made for the name, it will be overwritten with a new start time
     */
    @discardableResult
    public static func session(name: String, isStarting: Bool) -> Event? {
-      if let result = TimingTracker.shared.track(event: name, isStarting: isStarting) {
-         let sessionID = Payload.randomNumber(uuidStr: result.uuid.uuidString)
-         return Event.session(
-            name: name,
-            sessionID: sessionID,
-            engagementTimeMSec: String(result.elapsedTime)
-         )
-      } else { return nil }
+      guard let elapsedTime = TimingTracker.shared.track(event: name, isStarting: isStarting) else { return nil }
+      let sessionID: String = name.consistentRandom10Digits
+      #if DEBUG
+      print("sessionID: \(sessionID) elapsedTime: \(elapsedTime)")
+      #endif
+      return Event.session(
+         name: name,
+         sessionID: sessionID,
+         engagementTimeMSec: String(elapsedTime)
+      )
    }
 }
 

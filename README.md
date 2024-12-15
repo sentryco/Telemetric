@@ -61,21 +61,13 @@ Telemetric.shared.send(event: // single
 ```
 
 ### Session:
-- We create the session start event internally to get ellapsed time
-- We only send end session event in GA4. 
+- An internal timetracker records the ellapsed time for the session name
+- This is just a simple example. In a real senario, we would use the EventCollector and batch send these. The code would look more or lese the same. But we would use the Telemetric.shared.send(event:..) call instead
 ```swift
 let tracker = Tracker(measurementID: "G-XXXXXXXXXX", apiSecret: "YYYYYYYYYYYYYYYY")
-func session(name: String, start: Bool) { // Convenient method to start and end sessions
-   if let event = Event.session(name: "onboarding", isStarting: start) {
-      tracker.sendEvent(events: [event].compactMap { $0 }) { _ in
-         expectation.fulfill()
-      }
-   }
-}
-session(name: "onboarding", isStarting: true) // init session
-Event.session(name: "onboarding", isStarting: true) 
+tracker.send(event: Event.session(name: "onboarding", isStarting: true)) // init session
 sleep(4) // Simulates time elapsed
-session(name: "onboarding", isStarting: false)
+tracker.send(event: Event.session(name: "onboarding", isStarting: false)) // end session
 ```
 
 > [!CAUTION]  

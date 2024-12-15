@@ -34,6 +34,12 @@ public class Tracker {
       self.clientID = clientID
    }
    /**
+    * Convenient
+    */
+   public func sendEvent(event: Event?, complete: ((Bool) -> Void)? = nil) {
+      sendEvent(events: [event].compactMap { $0 }, complete: complete)
+   }
+   /**
     * - Note: URL: https://www.google-analytics.com/mp/collect?measurement_id=G-EMPR3SY5D5&api_secret=YOUR_API_SECRET
     * - Fixme: ⚠️️ Put this on a background thread, see NetTime package for instructions. Confer with copilot etc
     * - Parameters:
@@ -42,6 +48,7 @@ public class Tracker {
     *   - complete: - Fixme: ⚠️️ add doc
     */
    public func sendEvent(events: [Event], /*userProps: [String: String] = [:],*/ complete: ((Bool) -> Void)? = nil) {
+      guard !events.isEmpty else { return } // must have events to send
 //      #if DEBUG
 //      Swift.print("sendEvent")
 //      #endif

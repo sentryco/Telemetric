@@ -14,12 +14,33 @@ public class Telemetric: TelemetricKind {
    }
 }
 class TelemetricTests: XCTestCase {
+   func testRandomString() throws {
+      let randomWord: String = String((0..<Int.random(in: 2...20)).map { _ in Character(UnicodeScalar(Int.random(in: 97...122))!) })
+      Swift.print("randomWord:  \(randomWord)")
+      let words: [String] = [
+         randomWord,
+         "abracadabra",
+         "onboarding",
+         "appActiv",
+         "af_active",
+         "auth"
+      ]
+      let allSatisfy = words.allSatisfy { word in
+         word.consistentRandom10Digits.count == 10 &&
+         word.consistentRandom10DigitNumber.count == 10 &&
+         word.consistentRandom10Digits == word.consistentRandom10Digits &&
+         word.consistentRandom10DigitNumber == word.consistentRandom10DigitNumber
+      }
+      print("allSatisfy: \(allSatisfy ? "✅" : "❌")")
+      XCTAssertTrue(allSatisfy)
+   }
    func testSession() throws {
       let tracker = Tracker(measurementID: measurementID, apiSecret: apiSecret, clientID: Identity.uniqueUserIdentifier(type: .vendor))
-      let expectation = self.expectation(description: "Send event")
-      Event.session(name: "onboarding", isStarting: true)
+      let expectation = self.expectation(description: "Send session event")
+      let startEvent = Event.session(name: "appActive", isStarting: true)
       sleep(4)
-      let events = [Event.session(name: "onboarding", isStarting: false)].compactMap { $0 }
+      let endEvent = Event.session(name: "appActive", isStarting: false)
+      let events = [startEvent, endEvent].compactMap { $0 }
       tracker.sendEvent(events: events) { _ in
          expectation.fulfill()
       }
@@ -54,7 +75,7 @@ class TelemetricTests: XCTestCase {
          measurementID: measurementID,
          apiSecret: apiSecret,
          // This endpoint will return validation messages if there are any issues with your payload
-         apiEndpoint: "https://www.google-analytics.com/debug/mp/collect",
+//         apiEndpoint: "https://www.google-analytics.com/debug/mp/collect",
          clientID: Identity.uniqueUserIdentifier(type: .vendor)
       )
       // Create an expectation for a background download task.
