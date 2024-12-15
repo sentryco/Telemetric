@@ -65,12 +65,17 @@ Telemetric.shared.send(event: // single
 - We only send end session event in GA4. 
 ```swift
 let tracker = Tracker(measurementID: "G-XXXXXXXXXX", apiSecret: "YYYYYYYYYYYYYYYY")
-Event.session(name: "onboarding", isStarting: true) // init session
-sleep(4)
-let event = Event.session(name: "onboarding", isStarting: true)
-tracker.sendEvent(events: [event].compactMap { $0 }) { _ in
-   expectation.fulfill()
+func session(name: String, start: Bool) { // Convenient method to start and end sessions
+   if let event = Event.session(name: "onboarding", isStarting: start) {
+      tracker.sendEvent(events: [event].compactMap { $0 }) { _ in
+         expectation.fulfill()
+      }
+   }
 }
+session(name: "onboarding", isStarting: true) // init session
+Event.session(name: "onboarding", isStarting: true) 
+sleep(4) // Simulates time elapsed
+session(name: "onboarding", isStarting: false)
 ```
 
 > [!CAUTION]  
