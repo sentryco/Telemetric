@@ -82,7 +82,37 @@ extension Event {
          ]
       )
    }
+   /**
+    * - Fixme: ⚠️️ add doc
+    * - Parameters:
+    *   - name: your_event_name
+    *   - sessionID: xxxxxxxxxx (10 digit random string)
+    *   - engagementTimeMSec: mSec elapsed time
+    * - Returns: Event
+    */
+   public static func session(name: String, sessionID: String, engagementTimeMSec: String) -> Event? {
+      .init(
+         name: name,
+         params: [
+            "session_id": sessionID,
+            "engagement_time_msec": engagementTimeMSec
+         ]
+      )
+   }
+   /**
+    * - Fixme: ⚠️️ add doc
+    */
+   @discardableResult
+   public static func session(name: String, isStarting: Bool) -> Event? {
+      if let result = TimingTracker.shared.track(event: name, isStarting: isStarting) {
+         let sessionID = Payload.randomNumber(uuidStr: result.uuid.uuidString)
+         return Event.session(
+            name: name,
+            sessionID: sessionID,
+            engagementTimeMSec: String(result.elapsedTime)
+         )
+      } else { return nil }
+   }
 }
-
 
  

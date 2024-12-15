@@ -9,7 +9,7 @@ public struct Payload: Codable {
     * - Note: Unique identifier: This is a randomly generated string that uniquely identifies the browser-device pair
     * - Note: Unix timestamp: This represents the exact time and date when the user first interacted with your page. It's stored in microseconds and set in Coordinated Universal Time (UTC)1.
     */
-   public let client_id: String
+   let client_id: String
    /**
     * - Note: User ID  can track users across multiple devices and browser
     */
@@ -17,7 +17,7 @@ public struct Payload: Codable {
    /**
     * An array containing the event details
     */
-   public let events: [Event]
+   let events: [Event]
    /**
     * User Properties (Optional)
     * - Description: These are attributes that describe the user. Each hit can have up to 25 user properties.
@@ -30,13 +30,19 @@ public struct Payload: Codable {
    /**
     * - Fixme: ⚠️️ add doc
     */
-   public let non_personalized_ads: Bool
+   let non_personalized_ads: Bool
    /**
     * The version of the Measurement Protocol being used.
     * - Note: Measurement Protocol Version (Optional but Recommended)
     * - Fixme: ⚠️️ add doc
     */
    // let v: String = "2"
+   /**
+    * - Note: Remember to include the timestamp_micros parameter if the event is sent with a delay
+    * - Note: Must be within 72 hours of the current time when sending the request
+    * - Note: this is needed for session to work
+    */
+   let timestamp_micros: String
    /**
     * - Fixme: ⚠️️ add doc
     * - Parameters:
@@ -49,6 +55,7 @@ public struct Payload: Codable {
       self.client_id = client_id
       self.events = events
       //self.user_properties = user_properties
+      self.timestamp_micros = String(Int(Date().timeIntervalSince1970 * 1_000_000))
       self.non_personalized_ads = non_personalized_ads
    }
 }
@@ -62,12 +69,23 @@ extension Payload {
     * - Returns: - Fixme: ⚠️️ add doc
     */
    public static func randomNumberAndTimestamp(uuidStr: String) -> String {
-      let uuid = UUID.init(uuidString: uuidStr) ?? UUID()
-      let uuidBytes = [UInt8](uuid.uuidString.utf8)
-      let randomNumber = uuidBytes.reduce(0) { ($0 * 10 + UInt64($1 % 10)) % 1_000_000_0000 }
+      let randomNumber = randomNumber(uuidStr: uuidStr)
       let timestamp = Date().timeIntervalSince1970
       let combinedValue = "\(randomNumber).\(Int(timestamp))"
       return combinedValue
+   }
+   /**
+    * - Fixme: ⚠️️ add doc
+    */
+   public static func randomNumber(uuidStr: String) -> String {
+      let uuid = UUID.init(uuidString: uuidStr) ?? UUID()
+      let uuidBytes = [UInt8](uuid.uuidString.utf8)
+      var result: UInt64 = 0
+      for byte in uuidBytes {
+         let value = UInt64(byte % 10)
+         result = (result * 10 + value) % 1_000_000_0000
+      }
+      return String(result)
    }
 }
 

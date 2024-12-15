@@ -60,6 +60,19 @@ Telemetric.shared.send(event: // single
 )
 ```
 
+### Session:
+- We create the session start event internally to get ellapsed time
+- We only send end session event in GA4. 
+```swift
+let tracker = Tracker(measurementID: "G-XXXXXXXXXX", apiSecret: "YYYYYYYYYYYYYYYY")
+Event.session(name: "onboarding", isStarting: true) // init session
+sleep(4)
+let event = Event.session(name: "onboarding", isStarting: true)
+tracker.sendEvent(events: [event].compactMap { $0 }) { _ in
+   expectation.fulfill()
+}
+```
+
 > [!CAUTION]  
 > Google analytics for dashboards are sometimes very responsive, and sometimes events show up later.
  
