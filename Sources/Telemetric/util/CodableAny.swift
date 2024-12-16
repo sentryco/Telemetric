@@ -1,12 +1,18 @@
 import Foundation
-
+/**
+ * - Fixme: ⚠️️ add doc
+ */
 internal struct CodableAny: Codable {
    let value: Any
-   
+   /**
+    * - Fixme: ⚠️️ add doc
+    */
    init(value: Any) {
       self.value = value
    }
-   
+   /**
+    * - Fixme: ⚠️️ add doc
+    */
    func encode(to encoder: Encoder) throws {
       var container = encoder.singleValueContainer()
       switch value {
@@ -26,7 +32,9 @@ internal struct CodableAny: Codable {
          throw EncodingError.invalidValue(value, .init(codingPath: [], debugDescription: "Unsupported type"))
       }
    }
-   
+   /**
+    * - Fixme: ⚠️️ add doc
+    */
    init(from decoder: Decoder) throws {
       let container = try decoder.singleValueContainer()
       if let v = try? container.decode(Bool.self) {

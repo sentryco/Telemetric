@@ -49,9 +49,6 @@ public class Tracker {
     */
    public func sendEvent(events: [Event], /*userProps: [String: String] = [:],*/ complete: ((Bool) -> Void)? = nil) {
       guard !events.isEmpty else { return } // must have events to send
-//      #if DEBUG
-//      Swift.print("sendEvent")
-//      #endif
       var components = URLComponents(string: apiEndpoint)
       components?.queryItems = [
          URLQueryItem(name: "api_secret", value: apiSecret), // Optional, for authenticated hits, I think gtag flavour requires apisecret ref: https://github.com/adswerve/GA4-Measurement-Protocol-Apple-tvOS/blob/main/Example/tvOSTestApp/tvOSTestApp/GA4MPClient.swift
@@ -61,26 +58,18 @@ public class Tracker {
       var request = URLRequest(url: url, cachePolicy: .useProtocolCachePolicy)
       request.httpMethod = "POST"
       let client_id: String = /*"GA1.1." + */Payload.randomNumberAndTimestamp(uuidStr: clientID)
-//      #if DEBUG
-//      Swift.print("client_id: \(client_id)")
-//      #endif
       let payload: Payload = .init(
          client_id: client_id,
-         // user_id: UUID().uuidString,
          events: events,
-         /*user_properties: userProps,*/
          non_personalized_ads: false
       )
-//      #if DEBUG
-//      Swift.print("payload.timestamp_micros:  \(payload.timestamp_micros)")
-//      #endif
       let data: Data? = try? JSONEncoder().encode(payload)
       request.httpBody = data
       request.setValue("application/json", forHTTPHeaderField: "Content-Type")
       URLSession.shared.dataTask(with: request) { (data, response, error) in
          if let error = error {
             #if DEBUG
-            print("🚫 Error: \(error)")
+            if isDebugging { print("🚫 Error: \(error)") }
             #endif
             complete?(false)
          }
@@ -89,13 +78,13 @@ public class Tracker {
                let statusCode = response.statusCode
                if statusCode >= 500 {
                   #if DEBUG
-                  print("🚫 Server error (\(statusCode))' upload")
+                  if isDebugging { print("🚫 Server error (\(statusCode))' upload") }
                   #endif
                   // - Fixme: ⚠️️ Implement backoff and retry logic
                   complete?(false)
                } else { // presumed success
                   #if DEBUG
-                  print("✅ Successful upload. Status code: \(statusCode)") // If format or id is wrong this still returns success. Check your ga4 dashboard to confirm if things works
+                  if isDebugging { print("✅ Successful upload. Status code: \(statusCode)") } // If format or id is wrong this still returns success. Check your ga4 dashboard to confirm if things works
                   #endif
                   complete?(true)
                }
@@ -106,12 +95,13 @@ public class Tracker {
          if self.apiEndpoint == "https://www.google-analytics.com/debug/mp/collect" {
             Swift.print("data?.count:  \(String(describing: data?.count))")
             if let data = data, let string = String(data: data, encoding: .utf8) {
-               print("String: \(string)")
+               if isDebugging { print("String: \(string)") }
             } else {
-               print("Data is nil or not a valid UTF-8 encoded string")
+               if isDebugging { print("Data is nil or not a valid UTF-8 encoded string") }
             }
          }
          #endif
       }.resume()
    }
 }
+internal var isDebugging: Bool = false

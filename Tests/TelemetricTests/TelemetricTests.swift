@@ -26,26 +26,7 @@ class TelemetricTests: XCTestCase {
       tracker.sendEvent(event: exceptionEvent) { _ in expectation.fulfill() }
       self.wait(for: [expectation], timeout: 10.0)
    }
-   func testRandomString() throws {
-      let randomWord: String = String((0..<Int.random(in: 2...20)).map { _ in Character(UnicodeScalar(Int.random(in: 97...122))!) })
-      Swift.print("randomWord:  \(randomWord)")
-      let words: [String] = [
-         randomWord,
-         "abracadabra",
-         "onboarding",
-         "appActiv",
-         "af_active",
-         "auth"
-      ]
-      let allSatisfy = words.allSatisfy { word in
-         word.consistentRandom10Digits.count == 10 &&
-         word.consistentRandom10DigitNumber.count == 10 &&
-         word.consistentRandom10Digits == word.consistentRandom10Digits &&
-         word.consistentRandom10DigitNumber == word.consistentRandom10DigitNumber
-      }
-      print("allSatisfy: \(allSatisfy ? "✅" : "❌")")
-      XCTAssertTrue(allSatisfy)
-   }
+   
    func testSession() throws {
       let tracker = Tracker(measurementID: measurementID, apiSecret: apiSecret, clientID: Identity.uniqueUserIdentifier(type: .vendor))
       let expectation = self.expectation(description: "Send start session event")
@@ -61,11 +42,7 @@ class TelemetricTests: XCTestCase {
 //      }
       self.wait(for: [expectation, expectation2], timeout: 10.0)
    }
-   func testUserID() throws {
-      let clientID = Identity.uniqueUserIdentifier(type: .vendor)
-      let client_id = Payload.randomNumberAndTimestamp(uuidStr: clientID)
-      Swift.print("client_id:  \(client_id)")
-   }
+   
    /**
     * batching. Send on x reached, or every 24h
     */
@@ -90,7 +67,7 @@ class TelemetricTests: XCTestCase {
          measurementID: measurementID,
          apiSecret: apiSecret,
          // This endpoint will return validation messages if there are any issues with your payload
-//         apiEndpoint: "https://www.google-analytics.com/debug/mp/collect",
+         // apiEndpoint: "https://www.google-analytics.com/debug/mp/collect",
          clientID: Identity.uniqueUserIdentifier(type: .vendor)
       )
       // Create an expectation for a background download task.
@@ -118,6 +95,41 @@ class TelemetricTests: XCTestCase {
       }
       // Wait for the expectation to be fulfilled
       self.wait(for: [expectation], timeout: 10.0)
+   }
+   /**
+    * Ensure determinstic 10 digit random string works as expected
+    */
+   func testRandomString() throws {
+      let randomWord: String = String((0..<Int.random(in: 2...20)).map { _ in Character(UnicodeScalar(Int.random(in: 97...122))!) })
+      Swift.print("randomWord:  \(randomWord)")
+      let words: [String] = [
+         randomWord,
+         "abracadabra",
+         "onboarding",
+         "appActiv",
+         "af_active",
+         "auth"
+      ]
+      let allSatisfy = words.allSatisfy { word in
+         word.consistentRandom10Digits.count == 10 &&
+         word.consistentRandom10DigitNumber.count == 10 &&
+         word.consistentRandom10Digits == word.consistentRandom10Digits &&
+         word.consistentRandom10DigitNumber == word.consistentRandom10DigitNumber
+      }
+      print("allSatisfy: \(allSatisfy ? "✅" : "❌")")
+      XCTAssertTrue(allSatisfy)
+   }
+   /**
+    * Test client id
+    * - Fixme: ⚠️️ add more asserts
+    */
+   func testUserID() throws {
+      let clientID = Identity.uniqueUserIdentifier(type: .vendor)
+      let client_id = Payload.randomNumberAndTimestamp(uuidStr: clientID)
+      // Swift.print("client_id:  \(client_id)")
+      let assert = client_id.count == 21
+      print("client_id.count == 21: \(assert ? "✅" : "❌")")
+      XCTAssertTrue(assert)
    }
    /**
     * helps debuging the json format, its sensetive

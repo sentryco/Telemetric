@@ -15,14 +15,18 @@ internal class Keychain {
    internal static func set(key: String, value: String) throws {
       // Convert the string value to data
       guard let valueData: Data = value.data(using: .utf8) else {
+         #if DEBUG
          Swift.print("Keychain: Unable to store data, invalid input - key: \(key), value: \(value)")
+         #endif
          return
       }
       // Try to delete any existing value associated with the key
       do {
          try delete(itemKey: key) // Tries to delete the keychain item with the specified key
       } catch {
+         #if DEBUG
          Swift.print("Keychain: nothing to delete...") // Prints an error message if the keychain item cannot be deleted
+         #endif
       }
       // Define the query for adding the item to the keychain
       let queryAdd: [String: AnyObject] = [
@@ -34,9 +38,13 @@ internal class Keychain {
       // Add the item to the keychain
       let resultCode: OSStatus = SecItemAdd(queryAdd as CFDictionary, nil)
       if resultCode != 0 {
+         #if DEBUG
          print("Keychain: value not added - Error: \(resultCode)")
+         #endif
       } else {
+         #if DEBUG
          print("Keychain: value added successfully")
+         #endif
       }
    }
    /**

@@ -70,7 +70,7 @@ extension EventCollector {
     */
    public func trackEvent(_ event: Event) {
       #if DEBUG
-      Swift.print("trackEvent")
+      if isDebugging { Swift.print("trackEvent") }
       #endif
       events.append(event)
       eventPublisher.send(event) // Send the event to the publisher
@@ -84,7 +84,7 @@ extension EventCollector {
     */
    private func sendEventsToGA4(events: [Event]) {
       #if DEBUG
-      Swift.print("sendEventsToGA4 - events.isEmpty: \(self.events.isEmpty)")
+      if isDebugging { Swift.print("sendEventsToGA4 - events.isEmpty: \(self.events.isEmpty)") }
       #endif
       if !self.events.isEmpty {
          self.onSend?(events)
@@ -104,7 +104,7 @@ extension EventCollector {
     */
    private func startTimer() {
       #if DEBUG
-      Swift.print("startTimer")
+      if isDebugging { Swift.print("startTimer") }
       #endif
       // Also send any remaining events after 24 hours if not already sent
       timer = Timer.publish(every: maxAgeSeconds, on: .main, in: .common)
@@ -112,19 +112,13 @@ extension EventCollector {
          .sink { [weak self] _ in
             self?.sendEventsToGA4(events: self!.events)
          }
-      //         .store(in: &cancellables)
-//      timer = Timer.publish(every: maxAgeSeconds, on: .main, in: .common)
-//         .autoconnect()
-//         .sink { [weak self] _ in
-//            self?.sendEventsToGA4(events: self!.events)
-//         }
    }
    /**
     * Stop timer
     */
    private func stopTimer() {
       #if DEBUG
-      Swift.print("stopTimer")
+      if isDebugging { Swift.print("stopTimer") }
       #endif
       timer?.cancel()
       timer = nil

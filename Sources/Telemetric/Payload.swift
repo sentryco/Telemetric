@@ -58,7 +58,6 @@ public struct Payload: Codable {
    public init(client_id: String, events: [Event], /*user_properties: [String : String],*/ non_personalized_ads: Bool) {
       self.client_id = client_id
       self.events = events
-      //self.user_properties = user_properties
       self.timestamp_micros = String(Int(Date().timeIntervalSince1970 * 1_000_000))
       self.non_personalized_ads = non_personalized_ads
    }

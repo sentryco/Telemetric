@@ -26,16 +26,25 @@ public struct Event: Codable {
  * Codable - Suporting other types than string
  */
 extension Event {
+   /**
+    * - Fixme: ⚠️️ add doc
+    */
    enum CodingKeys: String, CodingKey {
       case name
       case params
    }
+   /**
+    * - Fixme: ⚠️️ add doc
+    */
    public init(from decoder: Decoder) throws {
       let container = try decoder.container(keyedBy: CodingKeys.self)
       name = try container.decode(String.self, forKey: .name)
       let paramsDictionary = try container.decode([String: CodableAny].self, forKey: .params)
       params = paramsDictionary.mapValues { $0.value }
    }
+   /**
+    * - Fixme: ⚠️️ add doc
+    */
    public func encode(to encoder: Encoder) throws {
       var container = encoder.container(keyedBy: CodingKeys.self)
       try container.encode(name, forKey: .name)
@@ -112,12 +121,12 @@ extension Event {
       guard let elapsedTime = TimingTracker.shared.track(event: name, isStarting: isStarting) else { return nil }
       let sessionID: String = name.consistentRandom10Digits
       #if DEBUG
-      print("sessionID: \(sessionID) elapsedTime: \(elapsedTime)")
+      if isDebugging { print("sessionID: \(sessionID) elapsedTime: \(elapsedTime)") }
       #endif
       return Event.session(
          name: name,
          sessionID: sessionID,
-         engagementTimeMSec: elapsedTime // 1 // String(elapsedTime) // "1"
+         engagementTimeMSec: elapsedTime
       )
    }
    /**
@@ -133,7 +142,7 @@ extension Event {
     *   - filePath: - Fixme: ⚠️️ add doc
     * - Returns: - Fixme: ⚠️️ add doc
     */
-   public static func exception(/*name: String = "exception", */description: String? = nil, isFatal: Bool? = nil, stackTrace: String? = nil, errorCode: String? = nil, userAction: String? = nil, environment: String? = nil, filePath: String? = nil) -> Event {
+   public static func exception(description: String? = nil, isFatal: Bool? = nil, stackTrace: String? = nil, errorCode: String? = nil, userAction: String? = nil, environment: String? = nil, filePath: String? = nil) -> Event {
       exception(params:
          ([
             "description": description, // "NullPointerException in MainActivity"
