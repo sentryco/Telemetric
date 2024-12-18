@@ -4,8 +4,11 @@ import CryptoKit
 
 extension String {
     
-   // Generate a consistent random 10-digit string
-   
+   /**
+    * Generates a consistent random 10-digit string based on the input string.
+    * - Parameter input: The input string to generate a consistent random 10-digit string from.
+    * - Returns: A 10-digit string that is consistent and deterministic based on the input string.
+    */
    var consistentRandom10Digits: String {
       // Use SHA256 to create a hash from the entropy string
       let data = Data(self.utf8)
@@ -18,9 +21,11 @@ extension String {
       // Ensure it is 10 digits long
       return digits.map(String.init).joined()
    }
-   
-   // Alternative
-   
+   /**
+    * Generates a consistent random 10-digit number based on the input string. (Alternative)
+    * - Parameter input: The input string to generate a consistent random 10-digit number from.
+    * - Returns: A 10-digit number that is consistent and deterministic based on the input string.
+    */
    var consistentRandom10DigitNumber: String {
       let hashedString = {
          let data = Data(self.utf8)

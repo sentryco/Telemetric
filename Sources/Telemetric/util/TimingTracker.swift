@@ -11,15 +11,20 @@ import Foundation
  */
 public class TimingTracker {
    /**
-    * - Fixme: ⚠️️ Add doc
+    * A shared instance of `TimingTracker` for global access.
     */
    public static let shared: TimingTracker = .init()
    /**
-    * - Fixme: ⚠️️ Add doc
+    * A dictionary to keep track of the start times of events.
+    * - Description: The key is the event name and the value is the start time in milliseconds since 1970.
     */
    private var trackingDict: [String: Int64] = [:]
    /**
-    * - Fixme: ⚠️️ Add doc
+    * - Description: Tracks the start or stop of an event and returns the elapsed time in milliseconds.
+    * - Parameters:
+    *   - event: The name of the event to track.
+    *   - isStarting: A boolean indicating whether the event is starting or stopping.
+    * - Returns: The elapsed time in milliseconds if the event is stopping, otherwise nil.
     */
    @discardableResult
    public func track(event: String, isStarting: Bool) -> Int64? {

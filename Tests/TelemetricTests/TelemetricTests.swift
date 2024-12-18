@@ -1,19 +1,10 @@
 import XCTest
 @testable import Telemetric
 
-// ⚠️️ Discard this before push, or squash if you forget
-let measurementID: String = ""
-let apiSecret: String = ""
-
-public class Telemetric: TelemetricKind {
-   static let shared: Telemetric = .init()
-   static let id = Identity.uniqueUserIdentifier(type: .keychain)
-   let tracker = Tracker(measurementID: measurementID, apiSecret: apiSecret, clientID: id)
-   public lazy var collector = EventCollector(batchSize: 4, maxAgeSeconds: 5) { events in
-      self.tracker.sendEvent(events: events)
-   }
-}
 class TelemetricTests: XCTestCase {
+   /**
+    * Tests the exception event tracking functionality.
+    */
    func testException() throws {
       let tracker = Tracker(
          measurementID: measurementID,
@@ -26,9 +17,16 @@ class TelemetricTests: XCTestCase {
       tracker.sendEvent(event: exceptionEvent) { _ in expectation.fulfill() }
       self.wait(for: [expectation], timeout: 10.0)
    }
-   
+   /**
+    * Tests the session event tracking functionality.
+    */
    func testSession() throws {
-      let tracker = Tracker(measurementID: measurementID, apiSecret: apiSecret, clientID: Identity.uniqueUserIdentifier(type: .vendor))
+      let tracker = Tracker(
+         measurementID: measurementID,
+         apiSecret: apiSecret,
+//         apiEndpoint: "https://www.google-analytics.com/debug/mp/collect",
+         clientID: Identity.uniqueUserIdentifier(type: .vendor)
+      )
       let expectation = self.expectation(description: "Send start session event")
       let startEvent = Event.session(name: "appActive", isStarting: true)
       tracker.sendEvent(event: startEvent) { _ in expectation.fulfill() }
@@ -42,9 +40,8 @@ class TelemetricTests: XCTestCase {
 //      }
       self.wait(for: [expectation, expectation2], timeout: 10.0)
    }
-   
    /**
-    * batching. Send on x reached, or every 24h
+    * Batching. Send on x reached, or every 24h
     */
    func testBatching() throws {
       Telemetric.shared.send(events: [
@@ -132,9 +129,9 @@ class TelemetricTests: XCTestCase {
       XCTAssertTrue(assert)
    }
    /**
-    * helps debuging the json format, its sensetive
+    * Helps debuging the json format, its sensetive
     */
-   /**/fileprivate func testJsonFormat() async throws {
+   fileprivate func testJsonFormat() async throws {
       Swift.print("testJsonFormat")
       let payload: Payload = .init(
          client_id: UUID().uuidString,
@@ -155,9 +152,9 @@ class TelemetricTests: XCTestCase {
       }
    }
    /**
-    * complex struct coding, bool, numbers etc. GA4 supports this
+    * Complex struct coding, bool, numbers etc. GA4 supports this
     */
-   /**/fileprivate func testComplexStruct() {
+   fileprivate func testComplexStruct() {
       Swift.print("testComplexStruct")
       //let event = Event(name: "eventName", params: ["key1": "value1", "key2": 42, "values": ["color": "blue", "price": "100"]/**/])
       let event = Event(
@@ -170,16 +167,13 @@ class TelemetricTests: XCTestCase {
          ]
       )
       let payload = Payload(client_id: "12345", /*user_id: "user123",*/ events: [event], /*user_properties: ["property1": "value1"],*/ non_personalized_ads: false)
-      
       do {
          // Encode the Payload instance to JSON data
          let jsonData = try JSONEncoder().encode(payload)
-         
          // Convert Data to JSON string for display purposes
          if let jsonString = String(data: jsonData, encoding: .utf8) {
             print(jsonString) // Output the JSON string representation in a more readable format
          }
-         
          // Pretty-print the JSON data
          if let jsonObject = try JSONSerialization.jsonObject(with: jsonData, options: []) as? [String: Any],
             let prettyJsonData = try? JSONSerialization.data(withJSONObject: jsonObject, options: [.prettyPrinted]),

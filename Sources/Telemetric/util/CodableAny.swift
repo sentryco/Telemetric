@@ -1,17 +1,21 @@
 import Foundation
 /**
- * - Fixme: ⚠️️ add doc
+ * A type-erased wrapper for Codable values.
+ * This struct allows encoding and decoding of values of any type that conforms to Codable.
  */
 internal struct CodableAny: Codable {
    let value: Any
    /**
-    * - Fixme: ⚠️️ add doc
+    * Initializes a new instance of `CodableAny` with the provided value.
+    * - Parameter value: The value to be wrapped. It can be of any type that conforms to Codable.
     */
    init(value: Any) {
       self.value = value
    }
    /**
-    * - Fixme: ⚠️️ add doc
+    * Encodes this `CodableAny` instance into the given encoder.
+    * - Parameter encoder: The encoder to write data to.
+    * - Throws: An error if any values are invalid for the given encoder's format.
     */
    func encode(to encoder: Encoder) throws {
       var container = encoder.singleValueContainer()
@@ -33,7 +37,9 @@ internal struct CodableAny: Codable {
       }
    }
    /**
-    * - Fixme: ⚠️️ add doc
+    * Decodes a value of any type that conforms to Codable from the given decoder.
+    * - Parameter decoder: The decoder to read data from.
+    * - Throws: An error if reading from the decoder fails, or if the data read is corrupted or otherwise invalid.
     */
    init(from decoder: Decoder) throws {
       let container = try decoder.singleValueContainer()

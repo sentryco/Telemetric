@@ -48,12 +48,11 @@ public struct Payload: Codable {
     */
    let timestamp_micros: String
    /**
-    * - Fixme: ⚠️️ add doc
+    * Initializes a new instance of `Payload` with the provided parameters.
     * - Parameters:
-    *   - client_id: - Fixme: ⚠️️ add doc
-    *   - events: - Fixme: ⚠️️ add doc
-    *   - user_properties: - Fixme: ⚠️️ add doc
-    *   - non_personalized_ads: - Fixme: ⚠️️ add doc
+    *   - client_id: A unique identifier for the user, specific to the device and browser.
+    *   - events: An array containing the event details.
+    *   - non_personalized_ads: A boolean indicating whether to restrict this data for use in personalized advertising.
     */
    public init(client_id: String, events: [Event], /*user_properties: [String : String],*/ non_personalized_ads: Bool) {
       self.client_id = client_id
@@ -64,12 +63,11 @@ public struct Payload: Codable {
 }
 extension Payload {
    /**
-    * Returns deterministic 10 Digit Number based on uuid, and 10 digit date
-    * - Fixme: ⚠️️ add doc, use copilot
-    * - Note: Random number and a timestamp  "XXXXXXXXXX.YYYYYYYYYY"
-    * - Note: "1234567890.0987654321" 10xNum.10xNum
-    * - Parameter uuidStr: - Fixme: ⚠️️ add doc
-    * - Returns: - Fixme: ⚠️️ add doc
+    * Returns a deterministic 10-digit number based on the provided UUID string and a 10-digit timestamp.
+    * - Note: The format of the returned string is "XXXXXXXXXX.YYYYYYYYYY", where "XXXXXXXXXX" is the 10-digit number and "YYYYYYYYYY" is the 10-digit timestamp.
+    * - Note: Example: "1234567890.0987654321"
+    * - Parameter uuidStr: A string representation of a UUID.
+    * - Returns: A string combining a 10-digit number generated from the UUID and a 10-digit timestamp.
     */
    public static func randomNumberAndTimestamp(uuidStr: String) -> String {
       let randomNumber = randomNumber(uuidStr: uuidStr)
@@ -78,7 +76,10 @@ extension Payload {
       return combinedValue
    }
    /**
-    * - Fixme: ⚠️️ add doc
+    * Generates a deterministic 10-digit number based on the provided UUID string.
+    * - Parameter uuidStr: A string representation of a UUID.
+    * - Returns: A 10-digit string generated from the UUID.
+    * - Note: If the provided string is not a valid UUID, a new UUID will be generated.
     */
    public static func randomNumber(uuidStr: String) -> String {
       let uuid = UUID.init(uuidString: uuidStr) ?? UUID()

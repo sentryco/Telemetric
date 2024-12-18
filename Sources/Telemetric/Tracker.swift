@@ -104,4 +104,4 @@ public class Tracker {
       }.resume()
    }
 }
-internal var isDebugging: Bool = false
+internal var isDebugging: Bool = true

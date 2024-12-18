@@ -51,7 +51,7 @@ public final class System {
    }
    /**
     * Provides the screen resolution of the user's device.
-    * - Fixme: ⚠️️ for swift 6.0 we will need to fence UIScreen in serlialized main thread. Check with copilot etc
+    * - Fixme: ⚠️️ For swift 6.0 we will need to fence UIScreen in serlialized main thread. Check with copilot etc
     */
    public static var screenResolution: String {
       // Check if the operating system is iOS

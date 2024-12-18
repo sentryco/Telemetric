@@ -10,7 +10,7 @@ import AppKit
  * - Note: Batch sends events when bathsize is full
  * - Note: Batch sends events on interval when elapsed time is reached, regardless of batchsize
  * - Note: Batch sends events when iOS apps enters background and before a macOS app closes (as macOS apps doesnt have a background state)
- * - Fixme: ⚠️️ potentiallyy also add elapsed time persistence in userdefault? requires handling our own timer and storing events in userdefault. so less optimal
+ * - Fixme: ⚠️️ Potentiallyy also add elapsed time persistence in userdefault? requires handling our own timer and storing events in userdefault. so less optimal
  * - Fixme: ⚠️️ Rename to something else? Eventbatcher? eventcacher? ask copilot?
  */
 public class EventCollector {
