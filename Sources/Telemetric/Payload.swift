@@ -36,7 +36,6 @@ public struct Payload: Codable {
    /**
     * The version of the Measurement Protocol being used.
     * - Note: Measurement Protocol Version (Optional but Recommended)
-    * - Fixme: ⚠️️ add doc
     */
    // let v: String = "2"
    /**

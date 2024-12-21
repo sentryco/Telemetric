@@ -23,9 +23,9 @@ public class Tracker {
    /**
     * Init
     * - Parameters:
-    *   - measurementID: - Fixme: ⚠️️ add doc
-    *   - apiSecret: - Fixme: ⚠️️ add doc
-    *   - apiEndpoint: - Fixme: ⚠️️ add doc
+    *   - measurementID: The unique identifier for the Google Analytics 4 property.
+    *   - apiSecret: The API secret for the Google Analytics 4 property. This is optional and used for authenticated hits.
+    *   - apiEndpoint: The endpoint for sending data to Google Analytics. Defaults to the standard Google Analytics endpoint.
     */
    public init(measurementID: String, apiSecret: String? = nil, apiEndpoint: String = "https://www.google-analytics.com/mp/collect", clientID: String = Identity.uniqueUserIdentifier(type: .vendor)) {
       self.measurementID = measurementID
@@ -43,9 +43,8 @@ public class Tracker {
     * - Note: URL: https://www.google-analytics.com/mp/collect?measurement_id=G-EMPR3SY5D5&api_secret=YOUR_API_SECRET
     * - Fixme: ⚠️️ Put this on a background thread, see NetTime package for instructions. Confer with copilot etc
     * - Parameters:
-    *   - events: - Fixme: ⚠️️ add doc
-    *   - userProps: - Fixme: ⚠️️ add doc
-    *   - complete: - Fixme: ⚠️️ add doc
+    *   - events: The events to send to Google Analytics.
+    *   - complete: A completion handler that is called when the request is complete. The boolean parameter indicates whether the request was successful.
     */
    public func sendEvent(events: [Event], /*userProps: [String: String] = [:],*/ complete: ((Bool) -> Void)? = nil) {
       guard !events.isEmpty else { return } // must have events to send

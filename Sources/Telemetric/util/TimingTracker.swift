@@ -1,6 +1,6 @@
 import Foundation
 /**
- * - Fixme: ⚠️️ Add doc
+ * A class for tracking the start and end times of events.
  * ## Examples:
  * let tracker = TimingTracker()
  * tracker.track(event: "onboarding", isStarting: true) // Start tracking
