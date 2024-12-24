@@ -81,7 +81,7 @@ tracker.sendEvent(event: exceptionEvent)
 ```
 
 > [!CAUTION]  
-> Google analytics for dashboards are sometimes very responsive, and sometimes events show up later.
+> Google analytics for dashboards are sometimes not very responsive, and sometimes events show up later.
  
 ### Swift Package Manager Installation
 
