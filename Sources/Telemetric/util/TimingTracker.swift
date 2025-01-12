@@ -35,22 +35,18 @@ public class TimingTracker {
          if isDebugging { print("Tracking started for \(event)") }
          #endif
          return 0
-      } else {
-         // Check if the event exists in the dictionary
-         if let startDate = trackingDict[event] {
-            let elapsedTime = currentTime - startDate
-            #if DEBUG
-            if isDebugging { print("Elapsed time for \(event): \(elapsedTime) msec") }
-            #endif
-            // Remove the entry from the dictionary
-            trackingDict.removeValue(forKey: event)
-            return elapsedTime
-         } else {
-            #if DEBUG
-            if isDebugging { print("No active tracking found for \(event) to stop.") }
-            #endif
-            return nil
-         }
       }
+      // Attempt to stop tracking
+      guard let startDate = trackingDict.removeValue(forKey: event) else {
+         #if DEBUG
+         if isDebugging { print("No active tracking found for \(event) to stop.") }
+         #endif
+         return nil
+      }
+      let elapsedTime = currentTime - startDate
+      #if DEBUG
+      if isDebugging { print("Elapsed time for \(event): \(elapsedTime) msec") }
+      #endif
+      return elapsedTime
    }
 }

@@ -9,7 +9,7 @@ class TelemetricTests: XCTestCase {
       let tracker = Tracker(
          measurementID: measurementID,
          apiSecret: apiSecret,
-//         apiEndpoint: "https://www.google-analytics.com/debug/mp/collect",
+         // apiEndpoint: "https://www.google-analytics.com/debug/mp/collect",
          clientID: Identity.uniqueUserIdentifier(type: .vendor)
       )
       let expectation = self.expectation(description: "Send esception event")
@@ -24,7 +24,7 @@ class TelemetricTests: XCTestCase {
       let tracker = Tracker(
          measurementID: measurementID,
          apiSecret: apiSecret,
-//         apiEndpoint: "https://www.google-analytics.com/debug/mp/collect",
+         //  apiEndpoint: "https://www.google-analytics.com/debug/mp/collect",
          clientID: Identity.uniqueUserIdentifier(type: .vendor)
       )
       let expectation = self.expectation(description: "Send start session event")
@@ -34,10 +34,10 @@ class TelemetricTests: XCTestCase {
       let expectation2 = self.expectation(description: "Send end session event")
       let endEvent = Event.session(name: "appActive", isStarting: false)
       tracker.sendEvent(event: endEvent) { _ in expectation2.fulfill() }
-//      let events = [startEvent, endEvent].compactMap { $0 }
-//      tracker.sendEvent(events: events) { _ in
-//         expectation.fulfill()
-//      }
+      // let events = [startEvent, endEvent].compactMap { $0 }
+      // tracker.sendEvent(events: events) { _ in
+      //    expectation.fulfill()
+      // }
       self.wait(for: [expectation, expectation2], timeout: 10.0)
    }
    /**
@@ -137,7 +137,7 @@ class TelemetricTests: XCTestCase {
          client_id: UUID().uuidString,
          // user_id: UUID().uuidString,
          events: [Event.pageView(pageTitle: "main_page")],
-//         user_properties: [:],
+         // user_properties: [:],
          non_personalized_ads: false
       )
       do {

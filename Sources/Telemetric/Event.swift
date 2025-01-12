@@ -40,10 +40,10 @@ extension Event {
     * - Throws: An error if reading from the decoder fails, or if the data read is corrupted or otherwise invalid.
     */
    public init(from decoder: Decoder) throws {
-      let container = try decoder.container(keyedBy: CodingKeys.self)
-      name = try container.decode(String.self, forKey: .name)
-      let paramsDictionary = try container.decode([String: CodableAny].self, forKey: .params)
-      params = paramsDictionary.mapValues { $0.value }
+      let container = try decoder.container(keyedBy: CodingKeys.self) // Create a keyed container using our CodingKeys
+      name = try container.decode(String.self, forKey: .name) // Decode the 'name' property from the container
+      let paramsDictionary = try container.decode([String: CodableAny].self, forKey: .params) // Decode 'params' as a dictionary with String keys and CodableAny values
+      params = paramsDictionary.mapValues { $0.value } // Extract the actual values from CodableAny and assign to 'params'
    }
    /**
     * Encodes this `Event` instance into the given encoder.
@@ -51,10 +51,10 @@ extension Event {
     * - Throws: An error if any values are invalid for the given encoder's format.
     */
    public func encode(to encoder: Encoder) throws {
-      var container = encoder.container(keyedBy: CodingKeys.self)
-      try container.encode(name, forKey: .name)
-      let paramsDictionary = params.mapValues { CodableAny(value: $0) }
-      try container.encode(paramsDictionary, forKey: .params)
+      var container = encoder.container(keyedBy: CodingKeys.self) // Create a keyed encoding container using CodingKeys
+      try container.encode(name, forKey: .name) // Encode the 'name' property using the key '.name'
+      let paramsDictionary = params.mapValues { CodableAny(value: $0) } // Convert 'params' values to 'CodableAny' instances
+      try container.encode(paramsDictionary, forKey: .params) // Encode the 'paramsDictionary' using the key '.params'
    }
 }
 extension Event {
@@ -110,7 +110,7 @@ extension Event {
          params: [
             "session_id": sessionID // ,
             // - Fixme: ⚠️️ seems like this is deprecated from GA4, which means we can remove TimingTracker, 
-//            "engagement_time_msec": engagementTimeMSec
+            // "engagement_time_msec": engagementTimeMSec
          ]
       )
    }
@@ -133,9 +133,9 @@ extension Event {
       if isDebugging { print("sessionID: \(sessionID) elapsedTime: \(elapsedTime)") }
       #endif
       return Event.session(
-         name: name,
-         sessionID: sessionID,
-         engagementTimeMSec: elapsedTime
+         name: name, // The name of the session event.
+         sessionID: sessionID, // The unique session identifier.
+         engagementTimeMSec: elapsedTime // The engagement time in milliseconds.
       )
    }
    /**
@@ -158,8 +158,8 @@ extension Event {
             "fatal": isFatal, // // true or false
             "stack_trace": stackTrace, // "java.lang.NullPointerException: Attempt to invoke...",
             "error_code": errorCode, // // "500"
-            "user_action": userAction,
-            "environment": environment,
+            "user_action": userAction, // The action taken by the user leading to the exception.
+            "environment": environment, // The environment where the exception occurred.
             "file_path": filePath // "/user/data/input.txt",
          ] as [String: Any?]).compactMapValues { $0 }
       )

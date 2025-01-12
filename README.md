@@ -7,16 +7,19 @@
 Minimal GA4 telemetrics for iOS and macOS. 
 
 ### Problem:
-Utilizing GA4 in Swift requires the FirebaseSDK. However, FirebaseInstanceID, responsible for handling user-ids, is closed source. This lack of transparency can be concerning, especially considering potential violations of Apple's stringent user identification rules.
+Using GA4 in Swift requires the FirebaseSDK, but FirebaseInstanceID, which manages user IDs, is closed-source. This lack of transparency is concerning, especially with Apple's strict user identification rules.
 
 ### Solution:
-This open-source library offers a solution. It performs the same functions as the FirebaseSDK, but with the added benefit of transparency. You can see exactly how personal identification is handled and even adjust it to a level you're comfortable with.
+This open-source library addresses the issue. It performs the same functions as FirebaseSDK but provides transparency. You can see how personal identification is handled and adjust it to your desired privacy level.
 
 ### Features:
 - 📊 Enables bulk sending of events to Google Analytics 4
 - 🗂️ Caches events and processes pings in batches to optimize resource usage
 - 🔐 Provides three levels of user-id persistency: vendor, userDefault, and keychain
 - 🆔 Formats the GA4 clientID with UUID and Date for unique identification 
+
+> [!NOTE]
+> Cached events are processed on a timer or when the app exits or enters background mode.
 
 ### Pre-requisite:
 - Create a free analytics account on [analytics.coogle.com](analytics.coogle.com) Login with your google account
@@ -147,14 +150,14 @@ By utilizing these various data types effectively, you can gain comprehensive in
 - Append  "debug_mode": 1, // or "debug_mode": true to event params to use GA4 Debugging Information
 - Append "session_id": "1664522264" to params and "timestamp_micros": "1664522406546590", to payload to work with session data 
 
+> [!CAUTION]  
+> Nested params in event is not supported by GA4. Use flat structures.
+ 
 ### Resources:
 - Seems to have ways of using the GA4 directly (sort of like the old UA api): https://www.thyngster.com/app-web-google-analytics-measurement-protocol-version-2
 - ga4 endpoint: https://www.google-analytics.com/g/collect
 - Debug endpoint: https://www.google-analytics.com/debug/mp/collect
 
-> [!CAUTION]  
-> Nested params in event is not supported by GA4. Use flat structures.
- 
 > [!WARNING]
 > Ensure that the user property you are trying to send has been properly registered in GA4. You need to create the user property in the GA4 Admin section under Custom Definitions before it can be sent with events. Go to GA4 Admin. Under the "Data display" section, click on "Custom definitions"
 
@@ -163,3 +166,4 @@ By utilizing these various data types effectively, you can gain comprehensive in
 - Add support for user_id (track user across devices and apps)
 - Figure out how to inject apikey and ma-id from github secrets, so that unit-tests works
 - make an assert to make sure posts are less than max allowed at 130kB
+- Remove TimingTracker, I dont think we need it

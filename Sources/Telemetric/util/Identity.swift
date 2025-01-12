@@ -52,20 +52,22 @@ extension Identity {
       // For iOS, we return the identifier for vendor
       return UIDevice.current.identifierForVendor?.uuidString
       #elseif os(macOS)
-      // For macOS, we need to use IOServiceMatching to get the device
-      let dev = IOServiceMatching("IOPlatformExpertDevice")
-      // Get the platform expert service
-      let platformExpert: io_service_t = IOServiceGetMatchingService(kIOMainPortDefault, dev)
-      // Create a property for the platform expert
-      let serialNumberAsCFString = IORegistryEntryCreateCFProperty(platformExpert, kIOPlatformUUIDKey as CFString, kCFAllocatorDefault, 0)
-      // Release the platform expert object
-      IOObjectRelease(platformExpert)
-      // Get the serial number as a CFTypeRef
-      let ser: CFTypeRef = serialNumberAsCFString?.takeUnretainedValue() as CFTypeRef
-      // If we can cast the serial number to a String, return it
-      if let result = ser as? String { return result }
-      // If we can't cast the serial number to a String, return nil
-      return nil
+      // For macOS, we need to use IOServiceMatching to get the device UUID
+      let platformExpert: io_service_t = IOServiceGetMatchingService(kIOMainPortDefault, IOServiceMatching("IOPlatformExpertDevice"))
+      guard platformExpert != 0 else {
+         // Failed to get platform expert service
+         return nil
+      }
+      // Ensure that platformExpert is released when we're done
+      defer { IOObjectRelease(platformExpert) }
+      // Get the UUID property from the platform expert
+      guard let serialNumberAsCFString = IORegistryEntryCreateCFProperty(platformExpert, kIOPlatformUUIDKey as CFString, kCFAllocatorDefault, 0) else {
+         // Failed to get UUID property
+         return nil
+      }
+      // Get the serial number as a String and return it
+      let serialNumber = serialNumberAsCFString.takeUnretainedValue() as? String
+      return serialNumber
       #else
       // If the OS is not iOS or macOS, print an error message and return nil
       Swift.print("OS not supported")
@@ -86,13 +88,13 @@ extension Identity {
     * - Remark: Persist between console-unit-test runs
     */
    fileprivate static var userDefaultID: String? {
-      let userDefaults = UserDefaults.standard // Initializes a new UserDefaults object
-      if userDefaults.object(forKey: "AppID") == nil { // Checks if the "AppID" key is not set in UserDefaults
+      if let id = UserDefaults.standard.string(forKey: "AppID") {
+         return id // Returns the existing "AppID" value from UserDefaults as a String
+      } else {
          let id: String = Self.vendorID ?? UUID().uuidString // Generates a new UUID if vendorID is nil, otherwise uses the vendorID
-         userDefaults.set(id, forKey: "AppID") // Sets the "AppID" key in UserDefaults to the generated or vendor-provided ID
-         userDefaults.synchronize() // Synchronizes the UserDefaults changes to disk
+         UserDefaults.standard.set(id, forKey: "AppID") // Sets the "AppID" key in UserDefaults to the generated or vendor-provided ID
+         return id // Returns the newly generated "AppID"
       }
-      return userDefaults.value(forKey: "AppID") as? String // Returns the "AppID" value from UserDefaults as a String
    }
 }
 /**
@@ -114,13 +116,21 @@ extension Identity {
     *   - https://developer.apple.com/library/ios/documentation/IDEs/Conceptual/AppDistributionGuide/MaintainingCertificates/MaintainingCertificates.html
     */
    fileprivate static var keychainID: String? {
-     let uuidKey = "persistentAppID" // This is the key we'll use to store the uuid in the keychain
-      if let id = try? Keychain.get(key: uuidKey) { // Check if we already have a uuid stored, if so return it
-         return id
-      }
-      let id = Self.vendorID ?? UUID().uuidString // Generate a new id // UIDevice.current.identifierForVendor?.uuidString else { return nil }
-      try? Keychain.set(key: uuidKey, value: id) // Store new identifier in keychain
-      return id  // Return new id
+       let uuidKey = "persistentAppID" // Key used to store the UUID in the keychain
+
+       // Check if we already have a UUID stored; if so, return it
+       if let existingID = try? Keychain.get(key: uuidKey) {
+           return existingID
+       }
+
+       // Generate a new UUID
+       let newID = Self.vendorID ?? UUID().uuidString
+
+       // Store the new UUID in the keychain
+       try? Keychain.set(key: uuidKey, value: newID)
+
+       // Return the new UUID
+       return newID
    }
 }
 /**

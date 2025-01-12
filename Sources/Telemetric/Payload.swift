@@ -69,10 +69,10 @@ extension Payload {
     * - Returns: A string combining a 10-digit number generated from the UUID and a 10-digit timestamp.
     */
    public static func randomNumberAndTimestamp(uuidStr: String) -> String {
-      let randomNumber = randomNumber(uuidStr: uuidStr)
-      let timestamp = Date().timeIntervalSince1970
-      let combinedValue = "\(randomNumber).\(Int(timestamp))"
-      return combinedValue
+      let randomNumber = randomNumber(uuidStr: uuidStr) // Generate a deterministic random number based on the UUID string
+      let timestamp = Date().timeIntervalSince1970 // Get the current timestamp in seconds since 1970
+      let combinedValue = "\(randomNumber).\(Int(timestamp))" // Combine the random number and timestamp into a string
+      return combinedValue // Return the combined value as a string
    }
    /**
     * Generates a deterministic 10-digit number based on the provided UUID string.
@@ -81,14 +81,14 @@ extension Payload {
     * - Note: If the provided string is not a valid UUID, a new UUID will be generated.
     */
    public static func randomNumber(uuidStr: String) -> String {
-      let uuid = UUID.init(uuidString: uuidStr) ?? UUID()
-      let uuidBytes = [UInt8](uuid.uuidString.utf8)
-      var result: UInt64 = 0
+      let uuid = UUID.init(uuidString: uuidStr) ?? UUID() // Attempt to initialize a UUID from uuidStr; if invalid, generate a new UUID
+      let uuidBytes = [UInt8](uuid.uuidString.utf8) // Convert the UUID string to an array of UTF8 bytes
+      var result: UInt64 = 0 // Initialize the result variable as UInt64 with a starting value of 0
       for byte in uuidBytes {
-         let value = UInt64(byte % 10)
-         result = (result * 10 + value) % 1_000_000_0000
+         let value = UInt64(byte % 10) // Compute the value by taking the byte modulo 10, resulting in a number between 0-9
+         result = (result * 10 + value) % 1_000_000_0000 // Update the result by appending the value and ensuring it stays within 10 digits
       }
-      return String(result)
+      return String(result) // Convert the final result to a String and return it
    }
 }
 
