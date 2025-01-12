@@ -1,7 +1,7 @@
 import XCTest
 @testable import Telemetric
 // This unit test checks the encoding and decoding functionality of CodableAny with various supported types, ensuring that the original and decoded values are equal.
-class CodableAnyTests: XCTestCase {
+extension TelemetricTests {
 
     /**
      * Tests the encoding and decoding functionality of `CodableAny`.
