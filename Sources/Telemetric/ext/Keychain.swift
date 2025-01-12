@@ -87,7 +87,7 @@ extension Keychain {
     * This function is used to delete the value associated with a given key from the keychain.
     * - Parameter itemKey: The key of the item to be deleted from the keychain.
     */
-   fileprivate static func delete(itemKey: String) throws {
+   internal static func delete(itemKey: String) throws {
       // Define the query for deleting the item from the keychain
       let queryDelete: [String: AnyObject] = [
          kSecClass as String: kSecClassGenericPassword, // Define the class of the item that this query will delete

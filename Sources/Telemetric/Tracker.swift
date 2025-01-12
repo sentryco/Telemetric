@@ -82,7 +82,7 @@ public class Tracker {
     *   - event: The event to send. If nil, the call does nothing.
     *   - complete: A completion handler that is called when the request is complete. The boolean parameter indicates whether the request was successful.
     */
-   private func buildURL() -> URL? {
+   internal func buildURL() -> URL? {
       guard var components = URLComponents(string: apiEndpoint) else {
          // Invalid API endpoint URL
          return nil

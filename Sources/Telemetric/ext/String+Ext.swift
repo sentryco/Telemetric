@@ -3,7 +3,6 @@ import CommonCrypto
 import CryptoKit
 
 extension String {
-    
    /**
     * Generates a consistent random 10-digit string based on the input string.
     * - Parameter input: The input string to generate a consistent random 10-digit string from.
@@ -39,8 +38,5 @@ extension String {
       let first8Characters = hashedString[hashedString.startIndex..<index]
       let number = Int(first8Characters, radix: 16) ?? 0
       return String(number + 1_000_000_000)
-   }
-   
-
-    
+   }  
 }

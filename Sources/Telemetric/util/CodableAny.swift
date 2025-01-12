@@ -19,10 +19,24 @@ internal struct CodableAny: Codable {
     */
    func encode(to encoder: Encoder) throws {
       var container = encoder.singleValueContainer()
+      if try !encodeValue(value, into: &container) {
+         throw EncodingError.invalidValue(value, .init(codingPath: encoder.codingPath, debugDescription: "Unsupported type"))
+      }
+   }
+   /**
+    * Helper method to encode a value into the provided container.
+    * - Parameters:
+    *   - value: The value to encode.
+    *   - container: The encoding container.
+    * - Returns: A Boolean indicating whether the encoding was successful.
+    */
+   private func encodeValue(_ value: Any, into container: inout SingleValueEncodingContainer) throws -> Bool {
       switch value {
       case let v as Bool:
          try container.encode(v)
       case let v as Int:
+         try container.encode(v)
+      case let v as Float:
          try container.encode(v)
       case let v as Double:
          try container.encode(v)
@@ -33,8 +47,9 @@ internal struct CodableAny: Codable {
       case let v as [CodableAny]:
          try container.encode(v)
       default:
-         throw EncodingError.invalidValue(value, .init(codingPath: [], debugDescription: "Unsupported type"))
+         return false
       }
+      return true
    }
    /**
     * Decodes a value of any type that conforms to Codable from the given decoder.
@@ -44,19 +59,45 @@ internal struct CodableAny: Codable {
    init(from decoder: Decoder) throws {
       let container = try decoder.singleValueContainer()
       if let v = try? container.decode(Bool.self) {
-         value = v
+          value = v
       } else if let v = try? container.decode(Int.self) {
-         value = v
+          value = v
+      } else if let v = try? container.decode(Float.self) {
+          value = v
       } else if let v = try? container.decode(Double.self) {
-         value = v
+          value = v
       } else if let v = try? container.decode(String.self) {
-         value = v
+          value = v
       } else if let v = try? container.decode([String: String].self) {
-         value = v
+          value = v
       } else if let v = try? container.decode([CodableAny].self) {
-         value = v
+          value = v
       } else {
-         throw DecodingError.dataCorruptedError(in: container, debugDescription: "Unsupported type")
+          throw DecodingError.dataCorruptedError(in: container, debugDescription: "Unsupported type")
+      }
+   }
+   /**
+    * Helper method to decode a value from the provided container.
+    * - Parameter container: The decoding container.
+    * - Returns: The decoded value as `Any`, or `nil` if decoding fails.
+    */
+   private func decodeValue(from container: SingleValueDecodingContainer) throws -> Any? {
+      if let v = try? container.decode(Bool.self) {
+         return v
+      } else if let v = try? container.decode(Int.self) {
+         return v
+      } else if let v = try? container.decode(Float.self) {
+         return v
+      } else if let v = try? container.decode(Double.self) {
+         return v
+      } else if let v = try? container.decode(String.self) {
+         return v
+      } else if let v = try? container.decode([String: String].self) {
+         return v
+      } else if let v = try? container.decode([CodableAny].self) {
+         return v
+      } else {
+         return nil
       }
    }
 }
