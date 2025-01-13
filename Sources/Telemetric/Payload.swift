@@ -79,16 +79,20 @@ extension Payload {
     * - Parameter uuidStr: A string representation of a UUID.
     * - Returns: A 10-digit string generated from the UUID.
     * - Note: If the provided string is not a valid UUID, a new UUID will be generated.
+    * - Note: To ensure the returned string is always 10 digits, we pad the result with leading zeros if necessary
+    * - Fixme: ⚠️️ Figure out a more robust way to create deterministc 10 count output for any uuid
     */
    public static func randomNumber(uuidStr: String) -> String {
-      let uuid = UUID.init(uuidString: uuidStr) ?? UUID() // Attempt to initialize a UUID from uuidStr; if invalid, generate a new UUID
+      let uuid = UUID(uuidString: uuidStr) ?? UUID() // Attempt to initialize a UUID from uuidStr; if invalid, generate a new UUID
       let uuidBytes = [UInt8](uuid.uuidString.utf8) // Convert the UUID string to an array of UTF8 bytes
       var result: UInt64 = 0 // Initialize the result variable as UInt64 with a starting value of 0
       for byte in uuidBytes {
          let value = UInt64(byte % 10) // Compute the value by taking the byte modulo 10, resulting in a number between 0-9
          result = (result * 10 + value) % 1_000_000_0000 // Update the result by appending the value and ensuring it stays within 10 digits
       }
-      return String(result) // Convert the final result to a String and return it
+      // Ensure the result is always 10 digits by padding with leading zeros if necessary
+      return String(format: "%010llu", result) // Format the result as a 10-digit string with leading zeros
+  
    }
 }
 

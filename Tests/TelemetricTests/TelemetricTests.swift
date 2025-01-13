@@ -132,6 +132,22 @@ class TelemetricTests: XCTestCase {
       print("client_id.count == 21: \(assert ? "✅" : "❌")")
       XCTAssertTrue(assert)
    }
+   // fixme add doc
+   func testRandomNumber() {
+      let vendorIDs: [String] = [
+         Identity.uniqueUserIdentifier(type: .vendor), // macOS vendor ID
+         "C95D99AC-05AE-55D4-8F6B-34FADD53F12B", // GitHub Actions vendor ID
+         UUID().uuidString // UUID based vendor ID
+      ]
+      for vendorID in vendorIDs {
+         Swift.print("vendorID:  \(vendorID)")
+         let randomNR: String = Payload.randomNumber(uuidStr: vendorID)
+         Swift.print("randomNR:  \(randomNR)")
+         let assert = randomNR.count == 10
+         print("randomNR.count == 10: \(assert ? "✅" : "❌")")
+         XCTAssertTrue(assert)
+      }
+   }
    /**
     * Helps debuging the json format, its sensetive
     */
