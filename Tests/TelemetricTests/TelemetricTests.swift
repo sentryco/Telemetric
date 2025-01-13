@@ -119,12 +119,15 @@ class TelemetricTests: XCTestCase {
    /**
     * Test client id
     * - Fixme: ⚠️️ add more asserts
+    * - Note: In GitHub Actions, the environment variable GITHUB_ACTIONS is set to "true".
     */
    func testUserID() throws {
-      let clientID = Identity.uniqueUserIdentifier(type: .vendor)
+      let clientID: String = Identity.uniqueUserIdentifier(type: .vendor)
       let client_id = Payload.randomNumberAndTimestamp(uuidStr: clientID)
       // Swift.print("client_id:  \(client_id)")
       let assert = client_id.count == 21
+      Swift.print("client_id.count:  \(client_id.count)")
+      Swift.print("client_id:  \(client_id)")
       print("client_id.count == 21: \(assert ? "✅" : "❌")")
       XCTAssertTrue(assert)
    }
