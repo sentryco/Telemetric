@@ -132,7 +132,18 @@ class TelemetricTests: XCTestCase {
       print("client_id.count == 21: \(assert ? "✅" : "❌")")
       XCTAssertTrue(assert)
    }
-   // fixme add doc
+   /**
+    * Tests the `Payload.randomNumber(uuidStr:)` function.
+    *
+    * This test verifies that the `randomNumber(uuidStr:)` method consistently generates a 10-digit number
+    * from various UUID strings. It uses different UUID inputs including:
+    * - The macOS vendor ID obtained via `Identity.uniqueUserIdentifier(type: .vendor)`
+    * - A known GitHub Actions vendor ID (`"C95D99AC-05AE-55D4-8F6B-34FADD53F12B"`)
+    * - A randomly generated UUID string
+    *
+    * For each UUID, the test asserts that the generated random number string has a length of exactly 10 characters,
+    * ensuring the method's correctness and reliability.
+    */
    func testRandomNumber() {
       let vendorIDs: [String] = [
          Identity.uniqueUserIdentifier(type: .vendor), // macOS vendor ID
