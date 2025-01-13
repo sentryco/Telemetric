@@ -123,6 +123,7 @@ class TelemetricTests: XCTestCase {
     */
    func testUserID() throws {
       let clientID: String = Identity.uniqueUserIdentifier(type: .vendor)
+      Swift.print("clientID:  \(clientID)")
       let client_id = Payload.randomNumberAndTimestamp(uuidStr: clientID)
       // Swift.print("client_id:  \(client_id)")
       let assert = client_id.count == 21

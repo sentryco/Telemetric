@@ -26,14 +26,23 @@ extension Identity {
     * - Parameter type: Type of identifier (vendor, userDef or keychain)
     */
    public static func uniqueUserIdentifier(type: IDType) -> String {
-      let id: String? = {
-         switch type {
-         case .vendor: return vendorID // Persistent between runs (in most cases)
-         case .userdefault: return userDefaultID // Persistent between runs
-         case .keychain: return keychainID // Persistent between installs
-         }
-      }()
-      return id ?? UUID().uuidString
+      
+         // This line checks whether the GITHUB_ACTIONS environment variable exists.
+         // If the variable exists (i.e., the code is running in GitHub Actions), the condition is true.
+//         if ProcessInfo.processInfo.environment["GITHUB_ACTIONS"] != nil {
+//            return UUID(uuidString: "00000000-0000-0000-0000-000000000000")!.uuidString
+//         } else {
+            let id: String? = {
+               switch type {
+               case .vendor: return vendorID // Persistent between runs (in most cases)
+               case .userdefault: return userDefaultID // Persistent between runs
+               case .keychain: return keychainID // Persistent between installs
+               }
+            }()
+            return id ?? UUID().uuidString
+//         }
+       
+     
    }
 }
 /**
