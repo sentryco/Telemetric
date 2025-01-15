@@ -8,6 +8,8 @@ on:
     branches: [ "main" ]
   pull_request:
     branches: [ "main" ]
+  schedule:
+    - cron: '0 * * * *'  # Runs every hour at minute 0
 
 jobs:
   build:
@@ -16,6 +18,20 @@ jobs:
 
     steps:
     - uses: actions/checkout@v4
+    - name: Check if it's time to run tests
+      shell: bash
+      run: |
+        TODAY=$(date -u +"%Y-%m-%d")
+        RANDOM_SEED=$(echo -n "$TODAY" | shasum | cut -d' ' -f1)
+        RANDOM_HOUR=$(( 16#${RANDOM_SEED:0:2} % 24 ))
+        CURRENT_HOUR=$(date -u +"%H")
+        echo "Random hour for today is $RANDOM_HOUR"
+        if [ "$CURRENT_HOUR" -eq "$RANDOM_HOUR" ]; then
+          echo "It's time to run the tests."
+        else
+          echo "Not the time to run tests yet."
+          exit 0
+        fi
     - name: Build
       run: swift build -v
     - name: Run tests
