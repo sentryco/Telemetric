@@ -109,7 +109,7 @@ extension Event {
          name: name,
          params: [
             "session_id": sessionID // ,
-            // - Fixme: ⚠️️ seems like this is deprecated from GA4, which means we can remove TimingTracker, 
+            // - Fixme: ⚠️️ seems like this is de-precated from GA4, which means we can remove TimingTracker, 
             // "engagement_time_msec": engagementTimeMSec
          ]
       )
